@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
   is_admin: {
     required: true,
+    default: false,
     type: Boolean,
   },
   username: {
@@ -30,10 +31,10 @@ const userSchema = new Schema({
     required: true,
     type: String,
   },
-  location : {
+  location: {
     required: true,
-    type : String,
-  }
+    type: String,
+  },
 });
 
 const Users = mongoose.model("User", userSchema);

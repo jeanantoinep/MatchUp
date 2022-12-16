@@ -1,0 +1,31 @@
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+
+const dataSchema = new Schema({
+  participant: {
+    required: true,
+    type: Schema.Types.ObjectId,
+    ref : Users,
+  },
+  date: {
+    required: true,
+    type: Date,
+    default: Date.now(),
+  },
+  location: {
+    required: true,
+    type: Location,
+  },
+  lastname: {
+    required: true,
+    type: String,
+  },
+  nb_participants: {
+    required: true,
+    type: Number ,
+  },
+
+});
+
+const Events = mongoose.model("Events", dataSchema);
+module.exports = Events;

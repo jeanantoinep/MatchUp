@@ -1,0 +1,25 @@
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+
+const dataSchema = new Schema({
+  location: {
+    required: true,
+    type: Location,
+  },
+  website: {
+    required: true,
+    type: URL,
+  },
+  Number: {
+    required: true,
+    type: String,
+  },
+  availability: {
+    required: true,
+    type: Date ,
+  },
+
+});
+
+const football_pitch = mongoose.model("football_pitch", dataSchema);
+module.exports = football_pitch;

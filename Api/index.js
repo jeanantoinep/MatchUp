@@ -6,10 +6,10 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(express.json());
-app.listen(3000, () => console.log("Listening on port 3000"));
 
 require("dotenv").config();
 
+mongoose.set("strictQuery", false);
 const mongoString = process.env.DATABASE_URL;
 mongoose.connect(mongoString);
 const database = mongoose.connection;
@@ -23,6 +23,6 @@ database.once("connected", () => {
 });
 
 app.get("/", (req, res) => res.send("My first REST API!"));
-app.listen(port, () => {
-  console.log("Listening on port " + port);
+app.listen(3000, () => {
+  console.log("Listening on port 3000");
 });

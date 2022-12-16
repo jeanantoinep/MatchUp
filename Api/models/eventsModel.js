@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const dataSchema = new Schema({
-  participant: {
+const eventSchema = new Schema({
+  participant: [{
     required: true,
     type: Schema.Types.ObjectId,
     ref : Users,
-  },
+  }],
   date: {
     required: true,
     type: Date,
@@ -14,7 +14,7 @@ const dataSchema = new Schema({
   },
   location: {
     required: true,
-    type: Location,
+    type: String,
   },
   lastname: {
     required: true,
@@ -24,8 +24,7 @@ const dataSchema = new Schema({
     required: true,
     type: Number ,
   },
-
 });
 
-const Events = mongoose.model("Events", dataSchema);
+const Events = mongoose.model("Events", eventSchema);
 module.exports = Events;

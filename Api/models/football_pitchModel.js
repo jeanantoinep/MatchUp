@@ -1,25 +1,24 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const dataSchema = new Schema({
+const footballPitchSchema = new Schema({
   location: {
     required: true,
-    type: Location,
+    type: String,
   },
   website: {
     required: true,
-    type: URL,
+    type: String,
   },
-  Number: {
+  number: {
     required: true,
     type: String,
   },
   availability: {
     required: true,
-    type: Date ,
+    type: Date,
   },
-
 });
 
-const football_pitch = mongoose.model("football_pitch", dataSchema);
+const football_pitch = mongoose.model("Football_pitch", footballPitchSchema);
 module.exports = football_pitch;

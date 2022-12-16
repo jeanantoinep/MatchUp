@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const dataSchema = new Schema({
+const userSchema = new Schema({
   is_admin: {
     required: true,
     type: Boolean,
@@ -32,9 +32,9 @@ const dataSchema = new Schema({
   },
   location : {
     required: true,
-    type : Location,
+    type : String,
   }
 });
 
-const Users = mongoose.model("User", dataSchema);
+const Users = mongoose.model("User", userSchema);
 module.exports = Users;

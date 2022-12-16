@@ -25,9 +25,6 @@ database.once("connected", () => {
   console.log("Database Connected");
 });
 
-app.use("/api", user);
-app.use("/api", product);
-app.use("/api", order);
 app.get("/", (req, res) => res.send("My first REST API!"));
 app.listen(port, () => {
   console.log("Listening on port " + port);

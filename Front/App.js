@@ -1,13 +1,13 @@
-import { StyleSheet, Text, View } from "react-native";
-
 // REDUX
 import { Provider } from "react-redux";
 import { store } from "./src/store/store";
-
+import axios from "axios";
 // REACT-NAVIGATION
 import { NavigationContainer } from "@react-navigation/native";
 
 import AuthStack from "./src/pages/Auth/AuthStack";
+
+axios.defaults.baseURL = "http://localhost:3000";
 
 const RootStack = () => {
     return (
@@ -24,12 +24,3 @@ export default function App() {
         </Provider>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#044593",
-        alignItems: "center",
-        justifyContent: "center",
-    },
-});

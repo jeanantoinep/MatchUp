@@ -2,11 +2,13 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const eventSchema = new Schema({
-  participant: [{
-    required: true,
-    type: Schema.Types.ObjectId,
-    ref : Users,
-  }],
+  participant: [
+    {
+      required: true,
+      type: Schema.Types.ObjectId,
+      ref: Users,
+    },
+  ],
   date: {
     required: true,
     type: Date,
@@ -16,13 +18,13 @@ const eventSchema = new Schema({
     required: true,
     type: String,
   },
-  lastname: {
+  name: {
     required: true,
     type: String,
   },
   nb_participants: {
     required: true,
-    type: Number ,
+    type: Number,
   },
 });
 

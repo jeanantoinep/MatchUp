@@ -11,7 +11,7 @@ const InputView = styled.View`
     justify-content: center;
     /* border: 1px solid #b1a1a1; */
     background-color: ${colors.whiteFade};
-    border-radius: 25px;
+    border-radius: 15px;
 `;
 const Input = styled.TextInput`
     padding: 16px;
@@ -56,7 +56,11 @@ const AuthInput = ({
                             color={colors.blue}
                         />
                     ) : (
-                        <MaterialCommunityIcons name="eye-outline" size={28} color={colors.blue} />
+                        <MaterialCommunityIcons
+                            name="eye-outline"
+                            size={28}
+                            color={colors.blue}
+                        />
                     )}
                 </Eye>
             )}

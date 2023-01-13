@@ -5,14 +5,19 @@ import axios from "axios";
 // REACT-NAVIGATION
 import { NavigationContainer } from "@react-navigation/native";
 
-import AuthStack from "./src/pages/Auth/AuthStack";
+import AuthStack from "./src/navigation/AuthStack";
 
-axios.defaults.baseURL = "http://localhost:3000";
+import { useDispatch, useSelector } from "react-redux";
+import AppStack from "./src/navigation/AppStack";
+
+axios.defaults.baseURL = "http://192.168.1.35:3000";
 
 const RootStack = () => {
+    const userToken = useSelector((state) => state.user.userToken);
+
     return (
         <NavigationContainer>
-            <AuthStack />
+            {userToken ? <AppStack /> : <AuthStack />}
         </NavigationContainer>
     );
 };

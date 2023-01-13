@@ -42,6 +42,28 @@ const LoginBtnTxt = styled.Text`
     text-decoration: underline;
 `;
 
+const RegisterBtn = styled.TouchableOpacity`
+    background-color: ${colors.red};
+    padding: 0 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    margin: 30px 0;
+`;
+const SubmitTxt = styled.Text`
+    color: ${colors.white};
+    font-size: 20px;
+    /* font-family: "Roboto_700Bold"; */
+`;
+
+// const Picker = styled.TouchableOpcity`
+//     color: ${color.red};
+//     font-size: 20px;
+//     /* font-family: "Roboto_700Bold"; */
+// `;
+
 const RegisterScreen = () => {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
@@ -74,13 +96,30 @@ const RegisterScreen = () => {
                     <Text> LOGO</Text>
                 </LogoView>
                 <Text>Register Screen</Text>
-                <AuthInput value={username} onChangeText={setUsername} placeholder="Username" />
-                <AuthInput value={email} onChangeText={setEmail} placeholder="Email" />
+                <AuthInput
+                    value={username}
+                    onChangeText={setUsername}
+                    placeholder="Username"
+                />
+                <AuthInput
+                    value={email}
+                    onChangeText={setEmail}
+                    placeholder="Email"
+                />
                 <View>
                     <Text>Select your age:</Text>
-                    <Picker selectedValue={age} onValueChange={(itemValue) => setAge(itemValue)}>
+                    <Picker
+                        selectedValue={age}
+                        onValueChange={(itemValue) => setAge(itemValue)}
+                        // STYLE ICI
+                        style={{}}
+                    >
                         {ageOptions.map((item) => (
-                            <Picker.Item key={item.value} label={item.label} value={item.value} />
+                            <Picker.Item
+                                key={item.value}
+                                label={item.label}
+                                value={item.value}
+                            />
                         ))}
                     </Picker>
                 </View>
@@ -90,7 +129,11 @@ const RegisterScreen = () => {
                         onValueChange={(itemValue) => setGender(itemValue)}
                     >
                         {genderOptions.map((item) => (
-                            <Picker.Item key={item.value} label={item.label} value={item.value} />
+                            <Picker.Item
+                                key={item.value}
+                                label={item.label}
+                                value={item.value}
+                            />
                         ))}
                     </Picker>
                 </View>
@@ -106,13 +149,20 @@ const RegisterScreen = () => {
                     onChangeText={setCheckPassword}
                     placeholder="Confirm password"
                 />
+                <RegisterBtn
+                // onPress={handleSubmit}
+                >
+                    <SubmitTxt>Register</SubmitTxt>
+                </RegisterBtn>
 
                 <LoginBtn
                     onPress={() => {
                         navigation.navigate("Login");
                     }}
                 >
-                    <LoginBtnTxt>Already Have an Account? Login now</LoginBtnTxt>
+                    <LoginBtnTxt>
+                        Already Have an Account? Login now
+                    </LoginBtnTxt>
                 </LoginBtn>
             </RegisterView>
         </MainView>

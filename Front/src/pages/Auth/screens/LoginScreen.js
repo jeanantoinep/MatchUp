@@ -6,6 +6,7 @@ import styled from "styled-components/native";
 import AuthInput from "../components/AuthInput";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
+import jwt_decode from "jwt-decode";
 
 //REDUX
 import { useDispatch } from "react-redux";
@@ -24,6 +25,7 @@ const LogoView = styled.View`
     border: 1px solid ${colors.red};
     width: 100px;
     height: 100px;
+    margin: 20px 0;
 `;
 const LoginView = styled.View`
     display: flex;
@@ -43,9 +45,19 @@ const RegisterBtnTxt = styled.Text`
     text-align: center;
     text-decoration: underline;
 `;
+
+const LoginBtn = styled.TouchableOpacity`
+    background-color: ${colors.red};
+    padding: 0 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    margin: 30px 0;
+`;
 const SubmitTxt = styled.Text`
-    color: #bdb9c7;
-    margin: 20px 0;
+    color: ${colors.white};
     font-size: 20px;
     /* font-family: "Roboto_700Bold"; */
 `;
@@ -62,11 +74,13 @@ const LoginScreen = () => {
     const handleSubmit = async () => {
         try {
             const response = await axios.post("/login", {
-                email: login,
+                login: login,
                 password: password,
             });
-            console.log(response);
-            dispatch(setUser(response.data));
+            const decoded = jwt_decode(response.data.token);
+            dispatch(
+                setUser({ user: decoded.user, token: response.data.token })
+            );
         } catch (error) {
             console.log(error);
         }
@@ -79,22 +93,28 @@ const LoginScreen = () => {
                     <Text>LOGO</Text>
                 </LogoView>
 
-                <AuthInput value={login} onChangeText={setLogin} placeholder="Email or Username" />
+                <AuthInput
+                    value={login}
+                    onChangeText={setLogin}
+                    placeholder="Email or Username"
+                />
                 <AuthInput
                     value={password}
                     onChangeText={setPassword}
                     isPassword
                     placeholder="Password"
                 />
-                <TouchableOpacity onPress={handleSubmit}>
-                    <SubmitTxt>Submit</SubmitTxt>
-                </TouchableOpacity>
+                <LoginBtn onPress={handleSubmit}>
+                    <SubmitTxt>Login</SubmitTxt>
+                </LoginBtn>
                 <RegisterBtn
                     onPress={() => {
                         navigation.navigate("Register");
                     }}
                 >
-                    <RegisterBtnTxt>Don't have an account yet ? Create one here</RegisterBtnTxt>
+                    <RegisterBtnTxt>
+                        Don't have an account yet ? Create one here
+                    </RegisterBtnTxt>
                 </RegisterBtn>
             </LoginView>
         </MainView>

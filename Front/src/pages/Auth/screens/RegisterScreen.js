@@ -8,12 +8,13 @@ import { Picker } from "@react-native-picker/picker";
 import AuthInput from "../components/AuthInput";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
+import { StyleSheet } from "react-native";
 //REDUX
 import { useDispatch } from "react-redux";
 import { setUser } from "../../../store/userSlice";
 
 const MainView = styled(KeyboardAwareScrollView)`
-    height: 100%;
+    height: 90%;
     width: 100%;
     padding-top: 20%;
     background-color: ${colors.blue};
@@ -37,7 +38,7 @@ const LoginBtn = styled.TouchableOpacity`
 `;
 const LoginBtnTxt = styled.Text`
     color: #bdb9c7;
-    font-size: 14px;
+    font-size: 10px;
     text-align: center;
     text-decoration: underline;
 `;
@@ -45,7 +46,7 @@ const LoginBtnTxt = styled.Text`
 const RegisterBtn = styled.TouchableOpacity`
     background-color: ${colors.red};
     padding: 0 40px;
-    height: 40px;
+    height: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -54,15 +55,30 @@ const RegisterBtn = styled.TouchableOpacity`
 `;
 const SubmitTxt = styled.Text`
     color: ${colors.white};
-    font-size: 20px;
+    font-size: 15px;
     /* font-family: "Roboto_700Bold"; */
+
 `;
 
-// const Picker = styled.TouchableOpcity`
-//     color: ${color.red};
-//     font-size: 20px;
-//     /* font-family: "Roboto_700Bold"; */
-// `;
+const styles = StyleSheet.create({
+    Picker: {
+        width:130,
+        height:20,
+        backgroundColor: '#FF7075',
+        borderColor: 'black',
+        borderWidth: 2,
+        color:"white",
+        fontSize:10,
+        
+
+      },
+      PickerItem: {
+        color: 'white',
+        height:10,
+        fontSize:6
+      }
+    
+});
 
 const RegisterScreen = () => {
     const [username, setUsername] = useState("");
@@ -89,13 +105,32 @@ const RegisterScreen = () => {
     ];
 
     const navigation = useNavigation();
+    const handleSubmit = async() => {
+        try {
+            const response = await axios.post("/register", {
+                username,
+                email,
+                age,
+                gender,
+                password,
+                checkPassword,
+            });
+            console.log(response.data);
+            
+            const { user, token } = response.data;
+            dispatch(setUser({ user, token }));
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     return (
         <MainView>
             <RegisterView>
-                <LogoView>
+            <LogoView>
                     <Text> LOGO</Text>
-                </LogoView>
-                <Text>Register Screen</Text>
+            </LogoView>
+
                 <AuthInput
                     value={username}
                     onChangeText={setUsername}
@@ -107,15 +142,18 @@ const RegisterScreen = () => {
                     placeholder="Email"
                 />
                 <View>
-                    <Text>Select your age:</Text>
+                    
                     <Picker
+                        
                         selectedValue={age}
                         onValueChange={(itemValue) => setAge(itemValue)}
                         // STYLE ICI
-                        style={{}}
+                        style={{backgroundColor:'#FF7075', color:'white',width: 130, height: 20, margin: 20, borderRadius: 10, fontSize:10 }}
+                                               
                     >
                         {ageOptions.map((item) => (
                             <Picker.Item
+                                placeholder="Age"
                                 key={item.value}
                                 label={item.label}
                                 value={item.value}
@@ -124,9 +162,11 @@ const RegisterScreen = () => {
                     </Picker>
                 </View>
                 <View>
+                
                     <Picker
                         selectedValue={gender}
                         onValueChange={(itemValue) => setGender(itemValue)}
+                        style={[styles.Picker]} itemStyle={styles.PickerItem}
                     >
                         {genderOptions.map((item) => (
                             <Picker.Item
@@ -143,6 +183,7 @@ const RegisterScreen = () => {
                     onChangeText={setPassword}
                     isPassword
                     placeholder="Password"
+                    style={{height:10}}
                 />
                 <AuthInput
                     value={checkPassword}
@@ -150,7 +191,7 @@ const RegisterScreen = () => {
                     placeholder="Confirm password"
                 />
                 <RegisterBtn
-                // onPress={handleSubmit}
+                onPress={handleSubmit}
                 >
                     <SubmitTxt>Register</SubmitTxt>
                 </RegisterBtn>

@@ -139,10 +139,29 @@ const deleteUser = async (req, res) => {
     }
 };
 
+const updateUser = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const updatedData = req.body;
+    const options = { new: true };
+    const salt = genSalt(10);
+    req.body.password =  hash(req.body.password, salt);
+    const updated = await Users.findByIdAndUpdate(id, updatedData, options);
+    if (updated) {
+      return res.status(200).send("User updated");
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+
 module.exports = {
-    register,
-    login,
-    getOneUser,
-    getAllUsers,
-    deleteUser,
+  register,
+  login,
+  getOneUser,
+  getAllUsers,
+  deleteUser,
+  updateUser,
 };

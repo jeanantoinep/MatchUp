@@ -6,7 +6,7 @@ import { colors } from "../../../../assets/colors";
 
 const InputView = styled.View`
     width: 70%;
-    margin: 20px 0;
+    margin: 18px 0;
     display: flex;
     justify-content: center;
     /* border: 1px solid #b1a1a1; */

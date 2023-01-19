@@ -41,4 +41,17 @@ const joinEvent = async (req, res) => {
     }
 };
 
-module.exports = { createEvent, joinEvent };
+const deleteEvent = async (req, res) => {
+    try {
+        const { eventId } = req.params;
+        const deleted = await Event.findByIdAndDelete(eventId);
+        if (deleted) {
+            return res.status(200).send("Event deleted");
+        }
+        throw new Error("Event not found");
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+};
+
+module.exports = { createEvent, joinEvent, deleteEvent };

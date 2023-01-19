@@ -3,12 +3,26 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import axios from "axios";
+import { colors } from "../../../../assets/colors";
 import CustomInput from "../components/CustomInput";
+
+import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 const MainView = styled.View`
+
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
+`;
+const AddGameBtn = styled.TouchableOpacity`
+    background-color: ${colors.red};
+    padding: 0 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    margin: 30px 0;
 `;
 
 const AddGame = () => {
@@ -17,8 +31,11 @@ const AddGame = () => {
     const [location, setLocation] = useState("");
     const [date, setDate] = useState(new Date());
     const [open, setOpen] = useState(false);
+   
 
-    const onChangeDate = (event, selectedDate) => {
+      
+      
+    const onChangeDate = ( DateTimePickerAndroid, selectedDate) => {
         const currentDate = selectedDate;
         setOpen(false);
         setDate(currentDate);
@@ -55,6 +72,7 @@ const AddGame = () => {
             />
 
             <Text>Date</Text>
+            <DateTimePicker value={new Date()} />
             <>
                 <TouchableOpacity title="Open" onPress={() => setOpen(true)}>
                     <Text>open date</Text>
@@ -74,9 +92,10 @@ const AddGame = () => {
                 value={location}
                 onChangeText={setLocation}
             />
-            <TouchableOpacity onPress={handleSubmit}>
-                <Text>Submit</Text>
-            </TouchableOpacity>
+            <AddGameBtn onPress={handleSubmit}>
+                <Text>Add AddGameBtn</Text>
+            </AddGameBtn>
+            
         </MainView>
     );
 };

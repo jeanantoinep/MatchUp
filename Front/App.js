@@ -1,36 +1,23 @@
-import { StyleSheet, Text, View } from "react-native";
-
 // REDUX
 import { Provider } from "react-redux";
 import { store } from "./src/store/store";
-
+import axios from "axios";
 // REACT-NAVIGATION
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 
-// Create stack
-const Stack = createNativeStackNavigator();
+import AuthStack from "./src/navigation/AuthStack";
 
-const LoginScreen = () => {
-    return (
-        <View style={styles.container}>
-            <Text>LOGIN PAGE</Text>
-        </View>
-    );
-};
+import { useDispatch, useSelector } from "react-redux";
+import AppStack from "./src/navigation/AppStack";
 
-const AuthStack = () => {
-    return (
-        <Stack.Navigator>
-            <Stack.Screen name="Login">{() => <LoginScreen />}</Stack.Screen>
-        </Stack.Navigator>
-    );
-};
+axios.defaults.baseURL = "http://192.168.1.35:3000";
 
 const RootStack = () => {
+    const userToken = useSelector((state) => state.user.userToken);
+
     return (
         <NavigationContainer>
-            <AuthStack />
+            {userToken ? <AppStack /> : <AuthStack />}
         </NavigationContainer>
     );
 };
@@ -42,12 +29,3 @@ export default function App() {
         </Provider>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#044593",
-        alignItems: "center",
-        justifyContent: "center",
-    },
-});

@@ -6,7 +6,7 @@ import axios from "axios";
 import { colors } from "../../../../assets/colors";
 import CustomInput from "../components/CustomInput";
 
-import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
+
 const MainView = styled.View`
 
     display: flex;
@@ -31,11 +31,8 @@ const AddGame = () => {
     const [location, setLocation] = useState("");
     const [date, setDate] = useState(new Date());
     const [open, setOpen] = useState(false);
-   
-
-      
-      
-    const onChangeDate = ( DateTimePickerAndroid, selectedDate) => {
+    
+    const onChangeDate = (event, selectedDate) => {
         const currentDate = selectedDate;
         setOpen(false);
         setDate(currentDate);
@@ -72,7 +69,6 @@ const AddGame = () => {
             />
 
             <Text>Date</Text>
-            <DateTimePicker value={new Date()} />
             <>
                 <TouchableOpacity title="Open" onPress={() => setOpen(true)}>
                     <Text>open date</Text>
@@ -84,16 +80,17 @@ const AddGame = () => {
                         onChange={onChangeDate}
                         minimumDate={new Date()}
                     />
+                    
                 )}
             </>
-
+            
             <CustomInput
                 name="Location"
                 value={location}
                 onChangeText={setLocation}
             />
             <AddGameBtn onPress={handleSubmit}>
-                <Text>Add AddGameBtn</Text>
+                <Text>Confirm Game</Text>
             </AddGameBtn>
             
         </MainView>

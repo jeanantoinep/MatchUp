@@ -110,11 +110,8 @@ const getOneUser = async (req, res) => {
     const user = await Users.findOne({ _id: id });
     if (user) {
         return res.status(200).json({ user });
-    } else {
-        return res
-            .status(404)
-            .send("User with the specified ID does not exists");
     }
+    return res.status(404).send("User with the specified ID does not exists");
 };
 
 const getAllUsers = async (req, res) => {

@@ -41,6 +41,24 @@ const joinEvent = async (req, res) => {
     }
 };
 
+const getOneEvent = async (req, res) => {
+    const { eventId } = req.params;
+    const event = await Event.findOne({ _id: eventId });
+    if (event) {
+        return res.status(200).json({ event });
+    }
+    return res.status(404).send("User with the specified ID does not exists");
+};
+
+const getAllEvents = async (req, res) => {
+    try {
+        const events = await Event.find();
+        res.status(200).json({ events });
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+};
+
 const deleteEvent = async (req, res) => {
     try {
         const { eventId } = req.params;
@@ -54,4 +72,10 @@ const deleteEvent = async (req, res) => {
     }
 };
 
-module.exports = { createEvent, joinEvent, deleteEvent };
+module.exports = {
+    createEvent,
+    joinEvent,
+    deleteEvent,
+    getOneEvent,
+    getAllEvents,
+};

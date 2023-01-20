@@ -3,6 +3,7 @@ import React from "react";
 import Homepage from "../pages/App/screens/Homepage";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { colors } from "../../assets/colors";
+import HomepageStack from "./HomepageStack";
 
 const Tab = createBottomTabNavigator();
 
@@ -10,16 +11,18 @@ const AppStack = () => {
     return (
         <Tab.Navigator
             screenOptions={{
+                headerShown: false,
                 tabBarShowLabel: false,
                 tabBarStyle: {
                     backgroundColor: colors.blue,
                     height: 80,
                 },
+                tabBarHideOnKeyboard: true,
             }}
         >
-            <Tab.Screen name="Homepage1">{() => <Homepage />}</Tab.Screen>
-            <Tab.Screen name="Homepage2">{() => <Homepage />}</Tab.Screen>
-            <Tab.Screen name="Homepage3">{() => <Homepage />}</Tab.Screen>
+            {/* <Tab.Screen name="Notification">{() => <Homepage />}</Tab.Screen> */}
+            <Tab.Screen name="Games">{() => <HomepageStack />}</Tab.Screen>
+            {/* <Tab.Screen name="Profile">{() => <Homepage />}</Tab.Screen> */}
         </Tab.Navigator>
     );
 };

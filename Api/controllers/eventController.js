@@ -1,4 +1,3 @@
-const { getEnvironmentData } = require("worker_threads");
 const Event = require("../models/eventsModel");
 const User = require("../models/usersModel");
 

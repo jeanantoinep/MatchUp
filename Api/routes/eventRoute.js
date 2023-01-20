@@ -1,4 +1,6 @@
 const express = require("express");
+const auth = require("../middlewares/auth");
+
 const {
     createEvent,
     joinEvent,
@@ -9,10 +11,10 @@ const {
 
 const eventRouter = express.Router();
 
-eventRouter.post("/event", createEvent);
-eventRouter.post("/event/:eventId/join", joinEvent);
-eventRouter.delete("/event/:eventId", deleteEvent);
-eventRouter.get("/event/:eventId", getOneEvent);
-eventRouter.get("/events", getAllEvents);
+eventRouter.post("/event", auth, createEvent);
+eventRouter.post("/event/:eventId/join", auth, joinEvent);
+eventRouter.delete("/event/:eventId", auth, deleteEvent);
+eventRouter.get("/event/:eventId", auth, getOneEvent);
+eventRouter.get("/events", auth, getAllEvents);
 
 module.exports = eventRouter;

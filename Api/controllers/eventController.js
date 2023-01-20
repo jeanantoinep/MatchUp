@@ -3,8 +3,7 @@ const User = require("../models/usersModel");
 
 const createEvent = async (req, res) => {
     try {
-        const newEvent = new Event(req.body);
-
+        const newEvent = new Event({ ...req.body, creator: req.user.userId });
         await newEvent.save();
         return res.status(201).json({
             message: "New event successfully created ! 🔥",
@@ -71,6 +70,55 @@ const getAllEvents = async (req, res) => {
     }
 };
 
+const updateEvent = async (req, res) => {
+    try {
+        const { eventId } = req.params;
+        const user = await User.findById(req.user.userId);
+        const event = await Event.findById(eventId);
+        if (user._id.toString() === event.creator.toString()) {
+            const updated = await Event.findByIdAndUpdate(eventId, req.body, {
+                new: true,
+            });
+            if (updated) {
+                return res
+                    .status(200)
+                    .send({ message: "Event successfully updated" });
+            }
+            return res.status(404).json({ message: "Event not found" });
+        }
+        return res.status(403).send({ message: "Forbidden" });
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+};
+
+const leaveEvent = async (req, res) => {
+    try {
+        const { eventId } = req.params;
+        const { userId } = req.user;
+        const event = await Event.findById(eventId);
+        if (!event) {
+            return res.status(404).json({
+                message: "Event not found",
+            });
+        }
+        if (!event.participants.includes(userId)) {
+            return res.status(400).json({
+                message: "User has not joined the event.",
+            });
+        }
+        event.participants = event.participants.filter(
+            (participant) => participant.toString() !== userId
+        );
+        await event.save();
+        return res.status(200).json({
+            message: "User succesfully leave the event",
+        });
+    } catch (error) {
+        return res.status(500).json(error.message);
+    }
+};
+
 const deleteEvent = async (req, res) => {
     try {
         const { eventId } = req.params;
@@ -92,4 +140,6 @@ module.exports = {
     deleteEvent,
     getOneEvent,
     getAllEvents,
+    updateEvent,
+    leaveEvent,
 };

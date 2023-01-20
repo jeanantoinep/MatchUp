@@ -10,7 +10,12 @@ const eventSchema = new Schema({
             ref: Users,
         },
     ],
-    date: {
+    startDate: {
+        required: true,
+        type: Date,
+        default: Date.now(),
+    },
+    endDate: {
         required: true,
         type: Date,
         default: Date.now(),
@@ -26,6 +31,17 @@ const eventSchema = new Schema({
     nb_participants: {
         required: true,
         type: Number,
+    },
+    creator: {
+        required: true,
+        type: Schema.Types.ObjectId,
+        ref: Users,
+    },
+
+    description: {
+        required: false,
+        default: null,
+        type: String,
     },
 });
 

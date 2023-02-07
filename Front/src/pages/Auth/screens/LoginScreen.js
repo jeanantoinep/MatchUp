@@ -7,6 +7,8 @@ import AuthInput from "../components/AuthInput";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
+import logo from "../../../../assets/logo.png";
+
 
 //REDUX
 import { useDispatch } from "react-redux";
@@ -22,10 +24,14 @@ const MainView = styled(KeyboardAwareScrollView)`
     background-color: ${colors.blue};
 `;
 const LogoView = styled.View`
-    border: 1px solid ${colors.red};
+    border: 0;
     width: 100px;
     height: 100px;
     margin: 20px 0;
+`;
+const Image = styled.Image`
+    width: 100%;
+    height: 100%;
 `;
 const LoginView = styled.View`
     display: flex;
@@ -90,7 +96,7 @@ const LoginScreen = () => {
         <MainView>
             <LoginView>
                 <LogoView>
-                    <Text>LOGO</Text>
+                    <Image source={logo} />
                 </LogoView>
 
                 <AuthInput

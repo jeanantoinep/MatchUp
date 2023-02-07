@@ -9,15 +9,20 @@ import AuthInput from "../components/AuthInput";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { StyleSheet } from "react-native";
+import logo from "../../../../assets/logo.png";
 
 //REDUX
 import { useDispatch } from "react-redux";
 import { setUser } from "../../../store/userSlice";
 
 const LogoView = styled.View`
-    border: 1px solid ${colors.red};
+    border: 0px solid ${colors.red};
     width: 100px;
     height: 100px;
+`;
+const Image = styled.Image`
+    width: 100%;
+    height: 100%;
 `;
 const RegisterView = styled.View`
     display: flex;
@@ -150,7 +155,7 @@ const RegisterScreen = () => {
         <KeyboardAwareScrollView contentContainerStyle={styles.MainView}>
             <RegisterView>
                 <LogoView>
-                    <Text> LOGO</Text>
+                    <Image source = {logo} />
                 </LogoView>
 
                 <AuthInput

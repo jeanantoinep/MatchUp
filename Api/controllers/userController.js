@@ -138,10 +138,57 @@ const deleteUser = async (req, res) => {
     }
 };
 
+const updateUser = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const updatedData = req.body;
+        const options = { new: true };
+
+        // check if new email and/or username is already taken
+        if (updatedData.email) {
+            const emailExist = await Users.findOne({ email: updatedData.email });
+            if (emailExist) {
+                return res.status(409).json({ message: "This email is already taken" });
+            }
+        }
+        if (updatedData.username) {
+            const usernameExist = await Users.findOne({ username: updatedData.username });
+            if (usernameExist) {
+                return res.status(409).json({ message: "This username is already taken" });
+            }
+        }
+
+        // check and hash new password
+        if (updatedData.password) {
+            // check for correct password
+            if (!checkPassword(updatedData.password)) {
+                return res.status(409).json({
+                    message: "The password does not meet the correct recommendations",
+                });
+            }
+
+            const hash = await bcrypt.hash(updatedData.password, 10);
+            updatedData.password = hash;
+        }
+
+        const updated = await Users.findByIdAndUpdate(id, updatedData, options);
+        if (updated) {
+            return res.status(200).json({ message: "User updated", updated });
+        } else {
+            return res.status(404).json({ message: "User not found" });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+
+
 module.exports = {
-    register,
-    login,
-    getOneUser,
-    getAllUsers,
-    deleteUser,
+  register,
+  login,
+  getOneUser,
+  getAllUsers,
+  deleteUser,
+  updateUser,
 };

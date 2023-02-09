@@ -49,7 +49,10 @@ const joinEvent = async (req, res) => {
 const getOneEvent = async (req, res) => {
     try {
         const { eventId } = req.params;
-        const event = await Event.findOne({ _id: eventId });
+        const event = await Event.findOne({ _id: eventId }).populate(
+            "participants",
+            "username"
+        );
         if (event) {
             return res.status(200).json({ event });
         }

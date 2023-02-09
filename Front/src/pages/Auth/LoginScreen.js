@@ -3,19 +3,18 @@ import React, { useState } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import styled from "styled-components/native";
 
-import AuthInput from "../components/AuthInput";
+import AuthInput from "../../components/AuthInput";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
-import logo from "../../../../assets/logo.png";
-
+import logo from "../../../assets/logo.png";
 
 //REDUX
 import { useDispatch } from "react-redux";
-import { setUser } from "../../../store/userSlice";
+import { setUser } from "../../store/userSlice";
 
 // ASSETS
-import { colors } from "../../../../assets/colors";
+import { colors } from "../../../assets/colors";
 
 const MainView = styled(KeyboardAwareScrollView)`
     height: 100%;

@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import AddGame from "../pages/App/screens/AddGame";
-import Homepage from "../pages/App/screens/Homepage";
+import AddGame from "../pages/App/AddGame";
+import Homepage from "../pages/App/Homepage";
 
 const Stack = createNativeStackNavigator();
 const HomepageStack = () => {

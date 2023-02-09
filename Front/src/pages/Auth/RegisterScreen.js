@@ -2,18 +2,18 @@ import { Text, View, Alert } from "react-native";
 import React, { useState } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import styled from "styled-components/native";
-import { colors } from "../../../../assets/colors";
+import { colors } from "../../../assets/colors";
 
 import { Picker } from "@react-native-picker/picker";
-import AuthInput from "../components/AuthInput";
+import AuthInput from "../../components/AuthInput";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { StyleSheet } from "react-native";
-import logo from "../../../../assets/logo.png";
+import logo from "../../../assets/logo.png";
 
 //REDUX
 import { useDispatch } from "react-redux";
-import { setUser } from "../../../store/userSlice";
+import { setUser } from "../../store/userSlice";
 
 const LogoView = styled.View`
     border: 0px solid ${colors.red};
@@ -155,7 +155,7 @@ const RegisterScreen = () => {
         <KeyboardAwareScrollView contentContainerStyle={styles.MainView}>
             <RegisterView>
                 <LogoView>
-                    <Image source = {logo} />
+                    <Image source={logo} />
                 </LogoView>
 
                 <AuthInput

@@ -2,7 +2,7 @@ import { View, Text } from "react-native";
 import React, { useState } from "react";
 import styled from "styled-components/native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { colors } from "../../../../assets/colors";
+import { colors } from "../../assets/colors";
 
 const InputView = styled.View`
     width: 70%;

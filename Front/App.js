@@ -15,6 +15,16 @@ axios.defaults.baseURL = "http://192.168.1.35:3000";
 const RootStack = () => {
     const userToken = useSelector((state) => state.user.userToken);
 
+    axios.interceptors.request.use(
+        (config) => {
+            if (userToken) {
+                config.headers = { Authorization: `Bearer ${userToken}` };
+            }
+            return config;
+        },
+        (err) => Promise.reject(err)
+    );
+
     return (
         <NavigationContainer>
             {userToken ? <AppStack /> : <AuthStack />}

@@ -111,24 +111,20 @@ const AddGame = () => {
 
     const handleSubmit = async () => {
         try {
-            if (!name || !nb || !location || !date) {
+            if (!name || !nb || !location || !startTime || !endTime) {
                 return Alert.alert("Warning", "please fill all the fields");
             }
             const response = await axios.post("/event", {
                 name,
                 nb_participants: nb,
                 location,
-                participants: ["63c12eec2c0ce24910675463"],
+                participants: [],
             });
             console.log(response.data);
         } catch (error) {
             console.log(error);
         }
     };
-
-    useEffect(() => {
-        console.log("USEEFFECT", startTime, endTime);
-    }, [startTime, endTime]);
 
     return (
         <KeyboardAwareScrollView contentContainerStyle={styles.mainView}>

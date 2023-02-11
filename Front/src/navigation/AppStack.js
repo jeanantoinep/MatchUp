@@ -45,7 +45,7 @@ const AppStack = () => {
             }}
             
             
-            name="Homepage">{() => < HomepageStack/>}
+            name="Notifications">{() => < HomepageStack/>}
             
 
 

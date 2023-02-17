@@ -10,8 +10,7 @@ const HomepageStack = () => {
         <Stack.Navigator>
             <Stack.Screen name="Homepage">{() => <Homepage />}</Stack.Screen>
             <Stack.Screen name="AddGame">{() => <AddGame />}</Stack.Screen>
-            <Stack.Screen name="EventPage">
-                {(props) => <EventPage {...props} />}
+            <Stack.Screen name="EventPage">{(props) => <EventPage {...props} />}
             </Stack.Screen>
         </Stack.Navigator>
     );

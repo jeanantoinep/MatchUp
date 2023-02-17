@@ -3,6 +3,7 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { colors } from "../../assets/colors";
 import HomepageStack from "./HomepageStack";
+import ProfileStack from "./ProfileStack";
 import logo from "../../assets/logo.png";
 import notification from "../../assets/notification.png";
 import profile from "../../assets/profile.png";
@@ -30,6 +31,7 @@ const AppStack = () => {
                 tabBarHideOnKeyboard: true,
             }}
         >
+            {/* notifications */}
             <Tab.Screen 
             options={{
                 tabBarIcon: (props) => (
@@ -52,7 +54,7 @@ const AppStack = () => {
 
             </Tab.Screen> 
 
-
+            {/* games */}
             <Tab.Screen
                 options={{
                     tabBarIcon: (props) => (
@@ -71,7 +73,7 @@ const AppStack = () => {
             
                 {() => <HomepageStack />}
             </Tab.Screen>
-            
+            {/* Profile */}
             <Tab.Screen name="Profile"
             options={{
                 tabBarIcon: (props) => (

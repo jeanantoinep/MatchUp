@@ -1,4 +1,5 @@
 const Event = require("../models/eventsModel");
+const Invites = require("../models/inviteModel");
 const User = require("../models/usersModel");
 
 const createEvent = async (req, res) => {
@@ -35,12 +36,18 @@ const joinEvent = async (req, res) => {
                 message: "User has already joined the event.",
             });
         }
-        event.participants.push(user);
-        await event.save();
-        return res.status(200).json({
-            message: "User successfully joined the event",
-            event,
+        const Invites = await Invites.findOne({
+            event: eventId,
+            receiver: userId,
         });
+        if (Invites.status === "accepted") {
+            event.participants.push(user._id);
+            await event.save();
+            return res.status(200).json({
+                message: "User successfully joined the event",
+                event,
+            });
+        }
     } catch (error) {
         return res.status(500).json(error.message);
     }

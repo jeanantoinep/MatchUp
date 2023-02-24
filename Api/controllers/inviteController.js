@@ -36,12 +36,13 @@ const getAllInvite = async (req, res) => {
 
 const deleteInvite = async (req, res) => {
     try {
-        const { inviteId } = req.params;
-        const deleted = await Invites.findByIdAndDelete(inviteId);
-        if (deleted) {
-            return res.status(200).send("Invitation deleted");
+        const invite = await Invites.findById(req.params);
+        if (invite) {
+            invite.status = "deleted";
+            await invite.save();
+            return res.status(200).send("Invitation successfully deleted");
         }
-        throw new Error("Invitation not found");
+        return res.status(404).send("Invitation not found");
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -61,4 +62,24 @@ const acceptedInvite = async (req, res) => {
     }
 };
 
-module.exports = (createInvite, getOneInvite, getAllInvite, deleteInvite);
+const cancelInvite = async (req, res) => {
+    try {
+        const invite = await Invites.findById(req.params);
+        if (invite) {
+            invite.status = "canceled";
+            await invite.save();
+            return res.status(200).json(invite);
+        }
+        return res.status(404).send("Invitation not found");
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+};
+
+module.exports =
+    (createInvite,
+    getOneInvite,
+    getAllInvite,
+    deleteInvite,
+    acceptedInvite,
+    cancelInvite);

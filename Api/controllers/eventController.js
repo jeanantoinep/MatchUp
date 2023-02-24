@@ -48,6 +48,9 @@ const joinEvent = async (req, res) => {
                 event,
             });
         }
+        return res.status(400).json({
+            message: "User has not accepted the invitation",
+        });
     } catch (error) {
         return res.status(500).json(error.message);
     }

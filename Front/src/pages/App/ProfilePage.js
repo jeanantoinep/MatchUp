@@ -1,4 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import styled from "styled-components";
+
 import React from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -39,7 +41,7 @@ const ProfilePage = ({ route }) => {
             setIsLoading(false);
         };
         fetchProfile();
-        console.log(profileId);
+        console.log(userId);
 
         
     }, []);
@@ -47,7 +49,7 @@ const ProfilePage = ({ route }) => {
         !isLoading && (
             <View>
                 <Text>Profile Page</Text>
-                {!isAlreadyPart(event, userId) && (
+                {!isAlreadyPart(user, userId) && (
                     <TouchableOpacity onPress={editProfile}>
                         <Text>Update Profile</Text>
                     </TouchableOpacity>

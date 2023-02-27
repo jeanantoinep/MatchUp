@@ -8,6 +8,7 @@ import logo from "../../assets/logo.png";
 import notification from "../../assets/notification.png";
 import profile from "../../assets/profile.png";
 import styled from "styled-components/native";
+import ProfilePage from "../pages/App/ProfilePage";
 
 const styles = StyleSheet.create({
     tinyLogo: {
@@ -46,11 +47,8 @@ const AppStack = () => {
                 ),
             }}
             
-            
             name="Notifications">{() => < HomepageStack/>}
             
-
-
 
             </Tab.Screen> 
 
@@ -90,7 +88,7 @@ const AppStack = () => {
             
             
             
-            >{() => <Homepage />}
+            >{() => <ProfilePage />}
             
             </Tab.Screen> 
         </Tab.Navigator>

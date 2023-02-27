@@ -10,7 +10,7 @@ import AuthStack from "./src/navigation/AuthStack";
 import { useDispatch, useSelector } from "react-redux";
 import AppStack from "./src/navigation/AppStack";
 
-axios.defaults.baseURL = "http://192.168.1.15:3000";
+axios.defaults.baseURL = "http://192.168.1.83:3000";
 
 const RootStack = () => {
     const userToken = useSelector((state) => state.user.userToken);

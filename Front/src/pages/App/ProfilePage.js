@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import styled from "styled-components";
 
 import React from "react";
@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../../store/userSlice";
 import axios from "axios";
 import { useState } from "react";
+import { colors } from "../../../assets/colors";
+
 
 
 const MainView = styled.View`
@@ -17,48 +19,57 @@ const MainView = styled.View`
     display: flex;
 `;
 
+const styles = StyleSheet.create({
+    MainView: {
+        width: "100%",
+        paddingVertical: "10%",
+        backgroundColor: colors.blue,
+    }
+})
+
+
+
 const Title = styled.Text`
     font-size: 28px;
     text-align: center;
 `;
-const EditUserBtn = styled.TouchableOpacity`
-    margin: 0 auto;
-    padding: 10px;
+const EditUserBtn  = styled.Text`
+color: ${colors.red};
+font-size: 12px;
+text-align: center;
+text-decoration: underline;
 `;
 
-const ProfilePage = ({ route }) => {
-    const [isLoading, setIsLoading] = useState(true);
-    const { userId } = route.params;
-    const dispatch = useDispatch();
-    const user = useSelector((state) => state.user.user);
-   /* const userId = useSelector((state) => state.user.userInfo.userId);*/
-    
-    useEffect(() => {
-        const fetchProfile = async () => {
-            const { data } = await axios.get(`/user/${eventId}`);
-            dispatch(setEvent({ event: data.user }));
-            console.log(data);
-            setIsLoading(false);
-        };
-        fetchProfile();
-        console.log(userId);
+const ProfileView = styled.View`
+display: flex;
+justify-content: center;
+align-items: center;
+height: 20%;
+`;
 
-        
-    }, []);
+const ProfilePage = ({ props }) => {
+      
+   /* const userId = useSelector((state) => state.user.userInfo.userId);*/
     return (
-        !isLoading && (
+        <ProfileView>
+
+            <TouchableOpacity>
             <View>
+            
+
                 <Text>Profile Page</Text>
-                {!isAlreadyPart(user, userId) && (
-                    <TouchableOpacity onPress={editProfile}>
-                        <Text>Update Profile</Text>
-                    </TouchableOpacity>
-                )}
-            </View>
-        )
+
+                <EditUserBtn onPress={() => null}>
+                        Edit
+                </EditUserBtn>
+                
+                
+            </View></TouchableOpacity>
+           
+        </ProfileView>
     );
 };
 
 export default ProfilePage;
 
-const styles = StyleSheet.create({});
+

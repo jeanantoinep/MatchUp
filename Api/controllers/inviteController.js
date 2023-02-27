@@ -1,5 +1,4 @@
 const Invites = require("../models/inviteModel");
-const User = require("../models/usersModel");
 
 const createInvite = async (req, res) => {
     try {
@@ -66,7 +65,7 @@ const cancelInvite = async (req, res) => {
     try {
         const invite = await Invites.findById(req.params);
         if (invite) {
-            invite.status = "canceled";
+            invite.status = "cancelled";
             await invite.save();
             return res.status(200).json(invite);
         }
@@ -76,10 +75,11 @@ const cancelInvite = async (req, res) => {
     }
 };
 
-module.exports =
-    (createInvite,
+module.exports = {
+    createInvite,
     getOneInvite,
     getAllInvite,
     deleteInvite,
+    cancelInvite,
     acceptedInvite,
-    cancelInvite);
+};

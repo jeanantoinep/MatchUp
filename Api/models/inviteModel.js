@@ -27,7 +27,7 @@ const inviteSchema = new Schema({
     status: {
         required: true,
         type: String,
-        enum: ["pending", "accepted", "rejected", "canceled"],
+        enum: ["pending", "accepted", "rejected", "cancelled"],
     },
 });
 

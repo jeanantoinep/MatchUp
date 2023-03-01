@@ -1,10 +1,12 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const Users = require("../models/usersModel");
 
 const inviteSchema = new Schema({
     type: {
         required: true,
         type: String,
+        enum: ["request", "invite"],
     },
     eventId: {
         required: true,
@@ -13,11 +15,13 @@ const inviteSchema = new Schema({
     },
     sender: {
         required: true,
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: Users,
     },
     receiver: {
         required: true,
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: Users,
     },
     date: {
         required: true,
@@ -28,6 +32,7 @@ const inviteSchema = new Schema({
         required: true,
         type: String,
         enum: ["pending", "accepted", "rejected", "cancelled"],
+        default: "pending",
     },
 });
 

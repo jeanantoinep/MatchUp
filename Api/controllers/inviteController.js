@@ -24,6 +24,19 @@ const getOneInvite = async (req, res) => {
     }
 };
 
+const getEventInvite = async (req, res) => {
+    try {
+        const { eventId } = req.params;
+        const invites = await Invites.find({
+            eventId,
+            status: { $ne: "cancelled" },
+        });
+        return res.status(200).json(invites);
+    } catch (error) {
+        return res.status(500).json(error.message);
+    }
+};
+
 const getAllInvite = async (req, res) => {
     try {
         const invites = await Invites.find();
@@ -78,6 +91,7 @@ const cancelInvite = async (req, res) => {
 module.exports = {
     createInvite,
     getOneInvite,
+    getEventInvite,
     getAllInvite,
     deleteInvite,
     cancelInvite,

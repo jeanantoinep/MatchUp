@@ -3,7 +3,7 @@ const Invites = require("../models/inviteModel");
 const createInvite = async (req, res) => {
     try {
         const newInvite = new Invites({ ...req.body, sender: req.user.id });
-        await newInvite.save;
+        await newInvite.save();
         return res.status(201).json({
             message: "L'invitation à bien été créée",
             newInvite,

@@ -51,6 +51,7 @@ const IconView = styled.View`
 const EventPage = ({ route }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [invites, setInvites] = useState([]);
+    const [userInvite, setUserInvite] = useState(null);
     const { eventId } = route.params;
     const dispatch = useDispatch();
     const event = useSelector((state) => state.event.event);
@@ -73,15 +74,15 @@ const EventPage = ({ route }) => {
         if (response.status === 201) {
             console.log("Your request has been sent");
         }
+        setUserInvite(response.data.newInvite);
     };
 
-    const hasAlreadyRequested = () => {
-        return (
-            invites.findIndex(
-                (invite) =>
-                    invite.type === "request" && invite.sender === userId
-            ) >= 0
-        );
+    const cancelRequest = async () => {
+        const response = await axios.put(`/invite/${userInvite._id}/cancel`);
+        if (response.status === 200) {
+            console.log("Your request has been cancelled");
+        }
+        setUserInvite(null);
     };
 
     useEffect(() => {
@@ -92,7 +93,13 @@ const EventPage = ({ route }) => {
         const fetchInvites = async () => {
             const { data } = await axios.get(`/event/invite/${eventId}`);
             setInvites(data);
-            console.log(data);
+            const isUserInvite = data.find(
+                (invite) =>
+                    invite.type === "request" && invite.sender === userId
+            );
+            if (isUserInvite) {
+                setUserInvite(isUserInvite);
+            }
         };
         fetchEvent();
         fetchInvites();
@@ -126,8 +133,10 @@ const EventPage = ({ route }) => {
                         )}
                     </Text>
                 </LineView>
-                {hasAlreadyRequested() ? (
-                    <Text>You have already requested to join this event</Text>
+                {userInvite ? (
+                    <ViewEventBtn onPress={cancelRequest}>
+                        <ViewEventText>Cancel request</ViewEventText>
+                    </ViewEventBtn>
                 ) : (
                     <ViewEventBtn onPress={requestJoin}>
                         <ViewEventText>Ask to Join</ViewEventText>

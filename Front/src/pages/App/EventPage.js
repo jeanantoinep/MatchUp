@@ -50,6 +50,7 @@ const IconView = styled.View`
 
 const EventPage = ({ route }) => {
     const [isLoading, setIsLoading] = useState(true);
+    const [invites, setInvites] = useState([]);
     const { eventId } = route.params;
     const dispatch = useDispatch();
     const event = useSelector((state) => state.event.event);
@@ -66,22 +67,36 @@ const EventPage = ({ route }) => {
         const invite = {
             type: "request",
             eventId: eventId,
-            sender: userId,
             receiver: event.creator,
         };
-        const response = await axios.post(`/invite`);
+        const response = await axios.post(`/invite`, invite);
         if (response.status === 201) {
             console.log("Your request has been sent");
         }
+    };
+
+    const hasAlreadyRequested = () => {
+        return (
+            invites.findIndex(
+                (invite) =>
+                    invite.type === "request" && invite.sender === userId
+            ) >= 0
+        );
     };
 
     useEffect(() => {
         const fetchEvent = async () => {
             const { data } = await axios.get(`/event/${eventId}`);
             dispatch(setEvent({ event: data.event }));
-            setIsLoading(false);
+        };
+        const fetchInvites = async () => {
+            const { data } = await axios.get(`/event/invite/${eventId}`);
+            setInvites(data);
+            console.log(data);
         };
         fetchEvent();
+        fetchInvites();
+        setIsLoading(false);
     }, []);
 
     return (
@@ -111,9 +126,13 @@ const EventPage = ({ route }) => {
                         )}
                     </Text>
                 </LineView>
-                <ViewEventBtn onPress={requestJoin}>
-                    <ViewEventText>Ask to Join</ViewEventText>
-                </ViewEventBtn>
+                {hasAlreadyRequested() ? (
+                    <Text>You have already requested to join this event</Text>
+                ) : (
+                    <ViewEventBtn onPress={requestJoin}>
+                        <ViewEventText>Ask to Join</ViewEventText>
+                    </ViewEventBtn>
+                )}
             </MainView>
         )
     );

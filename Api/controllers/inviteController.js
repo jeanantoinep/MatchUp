@@ -76,7 +76,7 @@ const acceptedInvite = async (req, res) => {
 
 const cancelInvite = async (req, res) => {
     try {
-        const invite = await Invites.findById(req.params);
+        const invite = await Invites.findById(req.params.id);
         if (invite) {
             invite.status = "cancelled";
             await invite.save();
@@ -84,6 +84,7 @@ const cancelInvite = async (req, res) => {
         }
         return res.status(404).send("Invitation not found");
     } catch (error) {
+        console.log(error);
         res.status(500).send(error.message);
     }
 };

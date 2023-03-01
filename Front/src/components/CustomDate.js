@@ -1,18 +1,21 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
+import styled from "styled-components";
+
+import displayDate from "../utils/displayDate";
+import displayTime from "../utils/displayTime";
+
+const DateView = styled.View`
+    display: flex;
+    align-items: center;
+`;
 
 const CustomDate = ({ startDate, endDate }) => {
-    const displayDate = (date) => {
-        return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-    };
-    const displayTime = (start, end) => {
-        return `${start.getHours()}:${start.getMinutes()} - ${end.getHours()}:${end.getMinutes()}`;
-    };
     return (
-        <View>
+        <DateView>
             <Text>{displayDate(startDate)}</Text>
             <Text>{displayTime(startDate, endDate)}</Text>
-        </View>
+        </DateView>
     );
 };
 

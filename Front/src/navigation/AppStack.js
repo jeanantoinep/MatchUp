@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image} from "react-native";
+import { View, Text, StyleSheet, Image } from "react-native";
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { colors } from "../../assets/colors";
@@ -10,11 +10,10 @@ import styled from "styled-components/native";
 
 const styles = StyleSheet.create({
     tinyLogo: {
-      width: 50,
-      height: 50,
+        width: 50,
+        height: 50,
     },
-    
-  });
+});
 const Tab = createBottomTabNavigator();
 
 const AppStack = () => {
@@ -30,67 +29,47 @@ const AppStack = () => {
                 tabBarHideOnKeyboard: true,
             }}
         >
-            <Tab.Screen 
-            options={{
-                tabBarIcon: (props) => (
-                    <View>
-                        <Image 
-                        style={styles.tinyLogo}
-                        source={notification} />
-                         
-                    </View>
-                 
-                    
-                ),
-            }}
-            
-            
-            name="Notifications">{() => < HomepageStack/>}
-            
-
-
-
-            </Tab.Screen> 
-
+            <Tab.Screen
+                options={{
+                    tabBarIcon: (props) => (
+                        <View>
+                            <Image
+                                style={styles.tinyLogo}
+                                source={notification}
+                            />
+                        </View>
+                    ),
+                }}
+                name="Notifications"
+            >
+                {() => <HomepageStack />}
+            </Tab.Screen>
 
             <Tab.Screen
                 options={{
                     tabBarIcon: (props) => (
                         <View>
-                            <Image 
-                            style={styles.tinyLogo}
-                            source={logo} />
-                             
+                            <Image style={styles.tinyLogo} source={logo} />
                         </View>
-                     
-                        
                     ),
                 }}
                 name="Games"
             >
-            
                 {() => <HomepageStack />}
             </Tab.Screen>
-            
-            <Tab.Screen name="Profile"
-            options={{
-                tabBarIcon: (props) => (
-                    <View>
-                        <Image 
-                        style={styles.tinyLogo}
-                        source={profile} />
-                         
-                    </View>
-                 
-                    
-                ),
-            }}
-            
-            
-            
-            >{() => <Homepage />}
-            
-            </Tab.Screen> 
+
+            <Tab.Screen
+                name="Profile"
+                options={{
+                    tabBarIcon: (props) => (
+                        <View>
+                            <Image style={styles.tinyLogo} source={profile} />
+                        </View>
+                    ),
+                }}
+            >
+                {() => <Homepage />}
+            </Tab.Screen>
         </Tab.Navigator>
     );
 };

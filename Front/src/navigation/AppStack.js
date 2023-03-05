@@ -3,10 +3,12 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { colors } from "../../assets/colors";
 import HomepageStack from "./HomepageStack";
+import ProfileStack from "./ProfileStack";
 import logo from "../../assets/logo.png";
 import notification from "../../assets/notification.png";
 import profile from "../../assets/profile.png";
 import styled from "styled-components/native";
+import ProfilePage from "../pages/App/ProfilePage";
 
 const styles = StyleSheet.create({
     tinyLogo: {
@@ -29,22 +31,27 @@ const AppStack = () => {
                 tabBarHideOnKeyboard: true,
             }}
         >
-            <Tab.Screen
-                options={{
-                    tabBarIcon: (props) => (
-                        <View>
-                            <Image
-                                style={styles.tinyLogo}
-                                source={notification}
-                            />
-                        </View>
-                    ),
-                }}
-                name="Notifications"
-            >
-                {() => <HomepageStack />}
-            </Tab.Screen>
+            {/* notifications */}
+            <Tab.Screen 
+            options={{
+                tabBarIcon: (props) => (
+                    <View>
+                        <Image 
+                        style={styles.tinyLogo}
+                        source={notification} />
+                         
+                    </View>
+                 
+                    
+                ),
+            }}
+            
+            name="Notifications">{() => < HomepageStack/>}
+            
 
+            </Tab.Screen> 
+
+            {/* games */}
             <Tab.Screen
                 options={{
                     tabBarIcon: (props) => (
@@ -57,19 +64,26 @@ const AppStack = () => {
             >
                 {() => <HomepageStack />}
             </Tab.Screen>
-
-            <Tab.Screen
-                name="Profile"
-                options={{
-                    tabBarIcon: (props) => (
-                        <View>
-                            <Image style={styles.tinyLogo} source={profile} />
-                        </View>
-                    ),
-                }}
-            >
-                {() => <Homepage />}
-            </Tab.Screen>
+            {/* Profile */}
+            <Tab.Screen name="Profile"
+            options={{
+                tabBarIcon: (props) => (
+                    <View>
+                        <Image 
+                        style={styles.tinyLogo}
+                        source={profile} />
+                         
+                    </View>
+                 
+                    
+                ),
+            }}
+            
+            
+            
+            >{() => <ProfilePage />}
+            
+            </Tab.Screen> 
         </Tab.Navigator>
     );
 };

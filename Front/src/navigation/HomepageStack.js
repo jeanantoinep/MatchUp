@@ -16,5 +16,4 @@ const HomepageStack = () => {
         </Stack.Navigator>
     );
 };
-
 export default HomepageStack;

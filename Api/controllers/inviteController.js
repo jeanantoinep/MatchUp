@@ -2,8 +2,8 @@ const Invites = require("../models/inviteModel");
 
 const createInvite = async (req, res) => {
     try {
-        const newInvite = new Invites({ ...req.body, sender: req.user.id });
-        await newInvite.save;
+        const newInvite = new Invites({ ...req.body, sender: req.user.userId });
+        await newInvite.save();
         return res.status(201).json({
             message: "L'invitation à bien été créée",
             newInvite,
@@ -19,6 +19,19 @@ const getOneInvite = async (req, res) => {
         const invite = await Invites.findById(eventId);
         if (invite) return res.status(201).json(invite);
         return res.status(404).send("There is no invitation for this ID");
+    } catch (error) {
+        return res.status(500).json(error.message);
+    }
+};
+
+const getEventInvite = async (req, res) => {
+    try {
+        const { eventId } = req.params;
+        const invites = await Invites.find({
+            eventId,
+            status: { $ne: "cancelled" },
+        });
+        return res.status(200).json(invites);
     } catch (error) {
         return res.status(500).json(error.message);
     }
@@ -63,7 +76,7 @@ const acceptedInvite = async (req, res) => {
 
 const cancelInvite = async (req, res) => {
     try {
-        const invite = await Invites.findById(req.params);
+        const invite = await Invites.findById(req.params.id);
         if (invite) {
             invite.status = "cancelled";
             await invite.save();
@@ -71,6 +84,7 @@ const cancelInvite = async (req, res) => {
         }
         return res.status(404).send("Invitation not found");
     } catch (error) {
+        console.log(error);
         res.status(500).send(error.message);
     }
 };
@@ -78,6 +92,7 @@ const cancelInvite = async (req, res) => {
 module.exports = {
     createInvite,
     getOneInvite,
+    getEventInvite,
     getAllInvite,
     deleteInvite,
     cancelInvite,

@@ -9,6 +9,7 @@ import notification from "../../assets/notification.png";
 import profile from "../../assets/profile.png";
 import styled from "styled-components/native";
 import ProfilePage from "../pages/App/ProfilePage";
+import NotificationStack from "./NotificationStack";
 
 const styles = StyleSheet.create({
     tinyLogo: {
@@ -32,24 +33,21 @@ const AppStack = () => {
             }}
         >
             {/* notifications */}
-            <Tab.Screen 
-            options={{
-                tabBarIcon: (props) => (
-                    <View>
-                        <Image 
-                        style={styles.tinyLogo}
-                        source={notification} />
-                         
-                    </View>
-                 
-                    
-                ),
-            }}
-            
-            name="Notifications">{() => < HomepageStack/>}
-            
-
-            </Tab.Screen> 
+            <Tab.Screen
+                options={{
+                    tabBarIcon: (props) => (
+                        <View>
+                            <Image
+                                style={styles.tinyLogo}
+                                source={notification}
+                            />
+                        </View>
+                    ),
+                }}
+                name="Notifications"
+            >
+                {() => <NotificationStack />}
+            </Tab.Screen>
 
             {/* games */}
             <Tab.Screen
@@ -65,25 +63,18 @@ const AppStack = () => {
                 {() => <HomepageStack />}
             </Tab.Screen>
             {/* Profile */}
-            <Tab.Screen name="Profile"
-            options={{
-                tabBarIcon: (props) => (
-                    <View>
-                        <Image 
-                        style={styles.tinyLogo}
-                        source={profile} />
-                         
-                    </View>
-                 
-                    
-                ),
-            }}
-            
-            
-            
-            >{() => <ProfilePage />}
-            
-            </Tab.Screen> 
+            <Tab.Screen
+                name="Profile"
+                options={{
+                    tabBarIcon: (props) => (
+                        <View>
+                            <Image style={styles.tinyLogo} source={profile} />
+                        </View>
+                    ),
+                }}
+            >
+                {() => <ProfilePage />}
+            </Tab.Screen>
         </Tab.Navigator>
     );
 };

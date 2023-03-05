@@ -89,6 +89,8 @@ const EventPage = ({ route }) => {
         const fetchEvent = async () => {
             const { data } = await axios.get(`/event/${eventId}`);
             dispatch(setEvent({ event: data.event }));
+            fetchInvites();
+            setIsLoading(false);
         };
         const fetchInvites = async () => {
             const { data } = await axios.get(`/event/invite/${eventId}`);
@@ -102,8 +104,6 @@ const EventPage = ({ route }) => {
             }
         };
         fetchEvent();
-        fetchInvites();
-        setIsLoading(false);
     }, []);
 
     return (

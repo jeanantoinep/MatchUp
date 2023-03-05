@@ -146,26 +146,35 @@ const updateUser = async (req, res) => {
 
         // check if new email and/or username is already taken
         if (updatedData.email) {
-            const emailExist = await Users.findOne({ email: updatedData.email });
-            if (emailExist) {
-                return res.status(409).json({ message: "This email is already taken" });
+            const user = await Users.findOne({
+                email: updatedData.email,
+            });
+            if (user && user._id != id) {
+                return res
+                    .status(409)
+                    .json({ message: "This email is already taken" });
             }
         }
         if (updatedData.username) {
-            const usernameExist = await Users.findOne({ username: updatedData.username });
-            if (usernameExist) {
-                return res.status(409).json({ message: "This username is already taken" });
+            const user = await Users.findOne({
+                username: updatedData.username,
+            });
+            if (user && user._id != id) {
+                return res
+                    .status(409)
+                    .json({ message: "This username is already taken" });
             }
         }
 
         // check and hash new password
         if (updatedData.password) {
             // check for correct password
-            if (!checkPassword(updatedData.password)) {
+            /*if (!checkPassword(updatedData.password)) {
                 return res.status(409).json({
-                    message: "The password does not meet the correct recommendations",
+                    message:
+                        "The password does not meet the correct recommendations",
                 });
-            }
+            }*/
 
             const hash = await bcrypt.hash(updatedData.password, 10);
             updatedData.password = hash;
@@ -182,13 +191,11 @@ const updateUser = async (req, res) => {
     }
 };
 
-
-
 module.exports = {
-  register,
-  login,
-  getOneUser,
-  getAllUsers,
-  deleteUser,
-  updateUser,
+    register,
+    login,
+    getOneUser,
+    getAllUsers,
+    deleteUser,
+    updateUser,
 };

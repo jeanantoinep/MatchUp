@@ -16,6 +16,7 @@ import { useState } from "react";
 
 import { AntDesign } from "@expo/vector-icons";
 import { colors } from "../../../assets/colors";
+import { useIsFocused } from "@react-navigation/native";
 
 const MainView = styled.View`
     width: 100%;
@@ -28,7 +29,9 @@ const MainView = styled.View`
 const Title = styled.Text`
     font-size: 28px;
     text-align: center;
+    margin: 16px 0;
 `;
+
 const AddGameBtn = styled.TouchableOpacity`
     margin: 0 auto;
     padding: 10px;
@@ -42,6 +45,8 @@ const Homepage = () => {
     const userEvents = useSelector((state) => state.event.userEvents);
     const otherEvents = useSelector((state) => state.event.otherEvents);
     const userId = useSelector((state) => state.user.userInfo.userId);
+
+    const isFocused = useIsFocused();
 
     useEffect(() => {
         const fetchEvents = async () => {
@@ -66,7 +71,7 @@ const Homepage = () => {
             }
         };
         fetchEvents();
-    }, []);
+    }, [isFocused]);
 
     return (
         !isLoading && (

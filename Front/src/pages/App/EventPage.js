@@ -36,13 +36,6 @@ const EventPage = ({ route }) => {
     const event = useSelector((state) => state.event.event);
     const userId = useSelector((state) => state.user.userInfo.userId);
 
-    const isAlreadyPart = (event, userId) => {
-        return (
-            event.participants.findIndex((el) => el._id === userId) >= 0 ||
-            event.creator._id === userId
-        );
-    };
-
     const requestJoin = async () => {
         const invite = {
             type: "request",

@@ -10,6 +10,7 @@ import styled from "styled-components";
 import { AntDesign } from "@expo/vector-icons";
 import displayDate from "../utils/displayDate";
 import displayTime from "../utils/displayTime";
+import { useNavigation } from "@react-navigation/native";
 
 const Title = styled.Text`
     font-size: 28px;
@@ -30,7 +31,9 @@ const IconView = styled.View`
     align-items: center;
 `;
 
+
 const EventDetails = ({ event }) => {
+    const navigation=useNavigation();
     return (
         <View>
             <FlatList

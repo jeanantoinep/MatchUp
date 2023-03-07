@@ -74,11 +74,9 @@ const login = async (req, res) => {
         const user = await Users.findOne({
             $or: [{ username: login }, { email: login }],
         });
-        console.log(user);
         if (!user) {
-            return res.status(409).json({
-                message:
-                    "The username or the email you're trying to use is not registered.",
+            return res.status(401).json({
+                message: "Wrong credentials",
             });
         }
         const match = await bcrypt.compare(password, user.password);
@@ -100,7 +98,7 @@ const login = async (req, res) => {
             });
         }
         return res.status(401).send({
-            message: "Wrong password",
+            message: "Wrong credentials",
         });
     } catch (error) {
         return res.status(500).json(error.message);

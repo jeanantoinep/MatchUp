@@ -31,6 +31,7 @@ const AppStack = () => {
                 },
                 tabBarHideOnKeyboard: true,
             }}
+            initialRouteName="Games"
         >
             {/* notifications */}
             <Tab.Screen

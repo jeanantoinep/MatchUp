@@ -6,17 +6,9 @@ import { setEvent } from "../../store/eventSlice";
 import axios from "axios";
 import { useState } from "react";
 import styled from "styled-components";
-import CustomDate from "../../components/CustomDate";
 import { colors } from "../../../assets/colors";
-import { AntDesign } from "@expo/vector-icons";
-import displayDate from "../../utils/displayDate";
-import displayTime from "../../utils/displayTime";
 
-const Title = styled.Text`
-    font-size: 28px;
-    text-align: center;
-    margin: 16px 0;
-`;
+import EventDetails from "../../components/EventDetails";
 
 const ViewEventBtn = styled.TouchableOpacity`
     padding: 6px 18px;
@@ -32,19 +24,6 @@ const ViewEventText = styled.Text`
 const MainView = styled.View`
     padding: 20px;
     display: flex;
-    align-items: center;
-`;
-
-const LineView = styled.View`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-`;
-
-const IconView = styled.View`
-    padding: 10px;
-    display: flex;
-    justify-content: center;
     align-items: center;
 `;
 
@@ -109,30 +88,7 @@ const EventPage = ({ route }) => {
     return (
         !isLoading && (
             <MainView>
-                <Title>{event.name}</Title>
-                <LineView>
-                    <IconView>
-                        <AntDesign name="user" size={24} color="black" />
-                    </IconView>
-                    <Text>
-                        Looking for :{" "}
-                        {event.nb_participants - event.participants.length - 1}{" "}
-                        player(s)
-                    </Text>
-                </LineView>
-                <LineView>
-                    <IconView>
-                        <AntDesign name="calendar" size={24} color="black" />
-                    </IconView>
-
-                    <Text>
-                        {displayDate(new Date(event.startDate))},{" "}
-                        {displayTime(
-                            new Date(event.startDate),
-                            new Date(event.endDate)
-                        )}
-                    </Text>
-                </LineView>
+                <EventDetails event={event} />
                 {userInvite ? (
                     <ViewEventBtn onPress={cancelRequest}>
                         <ViewEventText>Cancel request</ViewEventText>

@@ -138,14 +138,6 @@ const deleteUser = async (req, res) => {
     }
 };
 
-const getUserPosition = async (req, res) => {
-    try {
-        const { id } = req.params;
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-};
-
 const updateUser = async (req, res) => {
     try {
         const id = req.params.id;

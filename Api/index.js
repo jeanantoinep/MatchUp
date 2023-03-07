@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const user = require("./routes/userRoute");
 const event = require("./routes/eventRoute");
+const football = require("./routes/footballRoute");
 const morgan = require("morgan");
 
 const app = express();
@@ -31,3 +32,4 @@ database.once("connected", () => {
 
 app.use(user);
 app.use(event);
+app.use(football);

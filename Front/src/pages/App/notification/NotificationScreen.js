@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { colors } from "../../../../assets/colors";
 import styled from "styled-components";
+import { useNavigation } from "@react-navigation/native";
 
 const InviteView = styled.View`
     padding: 20px;
@@ -19,6 +20,7 @@ const InviteView = styled.View`
 const NotificationScreen = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [invites, setInvites] = useState([]);
+    const navigation = useNavigation();
     const fetchInvites = async () => {
         setIsLoading(true);
         const { data } = await axios.get("/invite/user");
@@ -44,7 +46,22 @@ const NotificationScreen = () => {
         }
     };
 
-    const renderInvite = () => {
+    const renderSeeGameBtn = (eventId) => {
+        return (
+            <TouchableOpacity
+                onPress={() =>
+                    navigation.navigate("Games", {
+                        screen: "EventPage",
+                        params: { eventId: eventId },
+                    })
+                }
+            >
+                <Text>See game</Text>
+            </TouchableOpacity>
+        );
+    };
+
+    const renderInvite = (item) => {
         const { sender, eventId, type, status, _id } = item;
         if (status === "accepted") {
             return renderAcceptedRequest(item);
@@ -57,10 +74,11 @@ const NotificationScreen = () => {
                     {eventId.name}
                 </Text>
                 <View>
+                    {renderSeeGameBtn(item.eventId._id)}
                     <TouchableOpacity onPress={() => acceptInvite(_id)}>
                         <Text>Accept</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={declineInvite}>
+                    <TouchableOpacity onPress={() => declineInvite(_id)}>
                         <Text>Decline</Text>
                     </TouchableOpacity>
                 </View>
@@ -81,6 +99,7 @@ const NotificationScreen = () => {
                     {eventId.name}
                 </Text>
                 <View>
+                    {renderSeeGameBtn(item.eventId._id)}
                     <TouchableOpacity onPress={() => acceptInvite(_id)}>
                         <Text>Accept</Text>
                     </TouchableOpacity>
@@ -92,16 +111,30 @@ const NotificationScreen = () => {
         );
     };
     const renderAcceptedRequest = (item) => {
-        const { sender, eventId } = item;
-        return (
-            <InviteView>
-                <Text>{item.type}</Text>
-                <Text>
-                    You have accepted {sender.username} request to join your
-                    game {eventId.name}
-                </Text>
-            </InviteView>
-        );
+        const { sender, eventId, type } = item;
+        if (type === "request") {
+            return (
+                <InviteView>
+                    <Text>{item.type}</Text>
+                    <Text>
+                        You have accepted {sender.username} request to join your
+                        game {eventId.name}
+                    </Text>
+                    {renderSeeGameBtn(item.eventId._id)}
+                </InviteView>
+            );
+        } else if (type === "invite") {
+            return (
+                <InviteView>
+                    <Text>{item.type}</Text>
+                    <Text>
+                        You have accepted {sender.username} invite to join their
+                        game {eventId.name}
+                    </Text>
+                    {renderSeeGameBtn(item.eventId._id)}
+                </InviteView>
+            );
+        }
     };
 
     return (

@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const Users = require("../models/usersModel");
 
 const inviteSchema = new Schema({
     type: {
@@ -11,17 +10,17 @@ const inviteSchema = new Schema({
     eventId: {
         required: true,
         type: Schema.Types.ObjectId,
-        ref: "Event",
+        ref: "Events",
     },
     sender: {
         required: true,
         type: Schema.Types.ObjectId,
-        ref: Users,
+        ref: "User",
     },
     receiver: {
         required: true,
         type: Schema.Types.ObjectId,
-        ref: Users,
+        ref: "User",
     },
     date: {
         required: true,

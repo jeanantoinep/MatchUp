@@ -43,6 +43,9 @@ const Homepage = () => {
     const dispatch = useDispatch();
 
     const userEvents = useSelector((state) => state.event.userEvents);
+    const participatingEvents = useSelector(
+        (state) => state.event.participatingEvents
+    );
     const otherEvents = useSelector((state) => state.event.otherEvents);
     const userId = useSelector((state) => state.user.userInfo.userId);
 
@@ -53,18 +56,25 @@ const Homepage = () => {
             try {
                 const { data } = await axios.get("/events");
                 const user = [];
+                const participating = [];
                 const other = [];
                 data.events.forEach((event) => {
-                    if (
-                        event.creator === userId ||
-                        event.participants.includes(userId)
-                    ) {
+                    console.log(event);
+                    if (event.creator === userId) {
                         user.push(event);
+                    } else if (event.participants.some((el) => el === userId)) {
+                        participating.push(event);
                     } else {
                         other.push(event);
                     }
                 });
-                dispatch(setEvents({ userEvents: user, otherEvents: other }));
+                dispatch(
+                    setEvents({
+                        userEvents: user,
+                        otherEvents: other,
+                        participatingEvents: participating,
+                    })
+                );
                 setIsLoading(false);
             } catch (error) {
                 console.log(error);
@@ -78,6 +88,11 @@ const Homepage = () => {
             <SectionList
                 sections={[
                     { title: "Your games", data: userEvents, user: true },
+                    {
+                        title: "Joined Games",
+                        data: participatingEvents,
+                        user: false,
+                    },
                     { title: "Other games", data: otherEvents, user: false },
                 ]}
                 renderItem={({ item }) => <Event event={item} />}

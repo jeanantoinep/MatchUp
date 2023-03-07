@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { useNavigation } from "@react-navigation/native";
 import CustomDate from "./CustomDate";
 import { colors } from "../../assets/colors";
-
+import { useSelector } from "react-redux";
 const EventView = styled.View`
     padding: 10px 20px;
     width: 100%;
@@ -42,8 +42,11 @@ const ViewEventText = styled.Text`
 
 const Event = ({ event }) => {
     const navigation = useNavigation();
+    const userId = useSelector((state) => state.user.userInfo.userId);
     const handlePress = () => {
-        navigation.navigate("EventPage", { eventId: event._id });
+        userId === event.creator
+            ? navigation.navigate("CreatorPage", { eventId: event._id })
+            : navigation.navigate("EventPage", { eventId: event._id });
     };
 
     return (

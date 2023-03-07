@@ -1,4 +1,6 @@
 const Invites = require("../models/inviteModel");
+const { joinEvent } = require("./eventController");
+const Event = require("../models/eventsModel");
 
 const createInvite = async (req, res) => {
     try {
@@ -9,6 +11,23 @@ const createInvite = async (req, res) => {
             newInvite,
         });
     } catch (error) {
+        return res.status(500).json(error.message);
+    }
+};
+
+const getUserInvite = async (req, res) => {
+    try {
+        const { userId } = req.user;
+        console.log(userId);
+        const userInvites = await Invites.find({
+            receiver: userId,
+            status: { $nin: ["cancelled", "rejected"] },
+        })
+            .populate({ path: "eventId", select: "name" })
+            .populate({ path: "sender", select: "username" });
+        return res.status(200).json(userInvites);
+    } catch (error) {
+        console.log(error);
         return res.status(500).json(error.message);
     }
 };
@@ -62,18 +81,51 @@ const deleteInvite = async (req, res) => {
 
 const acceptedInvite = async (req, res) => {
     try {
-        const invite = await Invites.findById(req.params);
-        if (invite) {
+        const invite = await Invites.findById(req.params.id);
+        const userId =
+            invite.type === "request" ? invite.sender : invite.receiver;
+        if (invite.status === "pending") {
             invite.status = "accepted";
+            await invite.save();
+            const event = await Event.findById(invite.eventId);
+            if (!event) {
+                return res.status(404).json({
+                    message: "Event not found",
+                });
+            }
+            if (event.participants.includes(userId)) {
+                return res.status(400).json({
+                    message: "User has already joined the event.",
+                });
+            }
+            event.participants.push(userId);
+            await event.save();
+            return res.status(200).json({
+                message: "User successfully joined the event",
+                event,
+            });
+        }
+        return res.status(404).send("Invitation not found");
+    } catch (error) {
+        console.log(error);
+        res.status(500).send(error.message);
+    }
+};
+
+const declineInvite = async (req, res) => {
+    try {
+        const invite = await Invites.findById(req.params.id);
+        if (invite) {
+            invite.status = "rejected";
             await invite.save();
             return res.status(200).json(invite);
         }
         return res.status(404).send("Invitation not found");
     } catch (error) {
+        console.log(error);
         res.status(500).send(error.message);
     }
 };
-
 const cancelInvite = async (req, res) => {
     try {
         const invite = await Invites.findById(req.params.id);
@@ -91,10 +143,12 @@ const cancelInvite = async (req, res) => {
 
 module.exports = {
     createInvite,
+    getUserInvite,
     getOneInvite,
     getEventInvite,
     getAllInvite,
     deleteInvite,
     cancelInvite,
+    declineInvite,
     acceptedInvite,
 };

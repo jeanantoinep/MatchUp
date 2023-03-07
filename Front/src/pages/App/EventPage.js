@@ -57,7 +57,7 @@ const EventPage = ({ route }) => {
     };
 
     const cancelRequest = async () => {
-        const response = await axios.put(`/invite/${userInvite._id}/cancel`);
+        const response = await axios.put(`/invite/cancel/${userInvite._id}`);
         if (response.status === 200) {
             console.log("Your request has been cancelled");
         }
@@ -65,12 +65,6 @@ const EventPage = ({ route }) => {
     };
 
     useEffect(() => {
-        const fetchEvent = async () => {
-            const { data } = await axios.get(`/event/${eventId}`);
-            dispatch(setEvent({ event: data.event }));
-            fetchInvites();
-            setIsLoading(false);
-        };
         const fetchInvites = async () => {
             const { data } = await axios.get(`/event/invite/${eventId}`);
             setInvites(data);
@@ -82,6 +76,13 @@ const EventPage = ({ route }) => {
                 setUserInvite(isUserInvite);
             }
         };
+        const fetchEvent = async () => {
+            const { data } = await axios.get(`/event/${eventId}`);
+            dispatch(setEvent({ event: data.event }));
+            fetchInvites();
+            setIsLoading(false);
+        };
+
         fetchEvent();
     }, []);
 

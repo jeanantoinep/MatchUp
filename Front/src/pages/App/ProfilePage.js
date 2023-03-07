@@ -21,7 +21,6 @@ const MainView = styled.View`
     padding: 20px;
     margin-top: 15%;
     align-items: center;
-    border: 1px solid red;
     display: flex;
 `;
 
@@ -56,11 +55,16 @@ const SubmitBtn = styled.TouchableOpacity`
 `;
 
 const ProfileView = styled.View`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 20%;
-`;
+    border: 0;
+    width: 100px;
+    height: 100px;
+    
+    `;
+
+const Image = styled.Image`
+    width: 100%;
+    height: 100%;
+    `;
 
 const ProfilePage = ({}) => {
     const [userData, setUserData] = useState(null);
@@ -106,7 +110,13 @@ const ProfilePage = ({}) => {
         </View>
     ) : (
         <MainView>
-            <View></View>
+            
+                
+                <ProfileView>
+                    <Image source={profile} />
+                
+                </ProfileView>
+            
 
             <CustomInput
                 value={userData.firstname}

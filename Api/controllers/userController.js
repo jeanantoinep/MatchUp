@@ -74,11 +74,9 @@ const login = async (req, res) => {
         const user = await Users.findOne({
             $or: [{ username: login }, { email: login }],
         });
-        console.log(user);
         if (!user) {
-            return res.status(409).json({
-                message:
-                    "The username or the email you're trying to use is not registered.",
+            return res.status(401).json({
+                message: "Wrong credentials",
             });
         }
         const match = await bcrypt.compare(password, user.password);
@@ -100,7 +98,7 @@ const login = async (req, res) => {
             });
         }
         return res.status(401).send({
-            message: "Wrong password",
+            message: "Wrong credentials",
         });
     } catch (error) {
         return res.status(500).json(error.message);
@@ -109,7 +107,9 @@ const login = async (req, res) => {
 
 const getOneUser = async (req, res) => {
     const { id } = req.params;
-    const user = await Users.findOne({ _id: id });
+    const user = await Users.findOne({ _id: id }).select(
+        "-password -isAdmin --_v"
+    );
     if (user) {
         return res.status(200).json({ user });
     }
@@ -148,8 +148,9 @@ const updateUser = async (req, res) => {
         if (updatedData.email) {
             const user = await Users.findOne({
                 email: updatedData.email,
+                _id: { $ne: id },
             });
-            if (user && user._id != id) {
+            if (user) {
                 return res
                     .status(409)
                     .json({ message: "This email is already taken" });
@@ -158,34 +159,20 @@ const updateUser = async (req, res) => {
         if (updatedData.username) {
             const user = await Users.findOne({
                 username: updatedData.username,
+                _id: { $ne: id },
             });
-            if (user && user._id != id) {
+            if (user) {
                 return res
                     .status(409)
                     .json({ message: "This username is already taken" });
             }
         }
 
-        // check and hash new password
-        if (updatedData.password) {
-            // check for correct password
-            /*if (!checkPassword(updatedData.password)) {
-                return res.status(409).json({
-                    message:
-                        "The password does not meet the correct recommendations",
-                });
-            }*/
-
-            const hash = await bcrypt.hash(updatedData.password, 10);
-            updatedData.password = hash;
-        }
-
         const updated = await Users.findByIdAndUpdate(id, updatedData, options);
         if (updated) {
             return res.status(200).json({ message: "User updated", updated });
-        } else {
-            return res.status(404).json({ message: "User not found" });
         }
+        return res.status(404).json({ message: "User not found" });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

@@ -12,6 +12,7 @@ import AppStack from "./src/navigation/AppStack";
 import { useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setUser } from "./src/store/userSlice";
+import FlashMessage from "react-native-flash-message";
 
 axios.defaults.baseURL = "http://192.168.1.35:3000";
 
@@ -50,6 +51,7 @@ export default function App() {
     return (
         <Provider store={store}>
             <RootStack />
+            <FlashMessage position={"bottom"} />
         </Provider>
     );
 }

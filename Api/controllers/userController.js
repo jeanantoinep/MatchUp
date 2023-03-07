@@ -191,6 +191,20 @@ const updateUser = async (req, res) => {
     }
 };
 
+const searchUsers = async (req, res) => {
+    try {
+        const { username } = req.query;
+        const regex = new RegExp(`^${username}`, "i");
+        const users = await Users.find({ username: regex })
+            .where({ _id: { $ne: req.user.userId } })
+            .select("username")
+            .limit(5);
+        return res.status(200).json(users);
+    } catch (error) {
+        return res.status(500).send(error.message);
+    }
+};
+
 module.exports = {
     register,
     login,
@@ -198,4 +212,5 @@ module.exports = {
     getAllUsers,
     deleteUser,
     updateUser,
+    searchUsers,
 };

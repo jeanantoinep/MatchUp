@@ -15,12 +15,15 @@ import axios from "axios";
 import { useState } from "react";
 import { colors } from "../../../assets/colors";
 import CustomInput from "../../components/CustomInput";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { logout } from "../../store/userSlice";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
-const MainView = styled.View`
+const MainView = styled(KeyboardAwareScrollView)`
     width: 100%;
     padding: 20px;
+
     margin-top: 15%;
-    align-items: center;
     display: flex;
 `;
 
@@ -55,20 +58,22 @@ const SubmitBtn = styled.TouchableOpacity`
 `;
 
 const ProfileView = styled.View`
-    border: 0;
+    border: 1px solid ${colors.red};
+    border-radius: 50px;
     width: 100px;
     height: 100px;
-    
-    `;
+    margin-bottom: 20px;
+`;
 
 const Image = styled.Image`
     width: 100%;
     height: 100%;
-    `;
+`;
 
 const ProfilePage = ({}) => {
     const [userData, setUserData] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    const dispatch = useDispatch();
 
     const handleInputChange = (field, value) => {
         setUserData({ ...userData, [field]: value });
@@ -80,43 +85,38 @@ const ProfilePage = ({}) => {
         try {
             const { data } = await axios.put(`/user/${userId}`, userData);
             // setUserData(data.updated);
-            console.log(data);
+            fetchUserData();
         } catch (error) {
             console.log(error);
         }
     };
 
+    const handleLogout = async () => {
+        await AsyncStorage.removeItem("userInfo");
+        dispatch(logout());
+    };
+    const fetchUserData = async () => {
+        try {
+            const response = await axios.get(`/user/${userId}`);
+            setUserData(response.data.user);
+            setIsLoading(false);
+        } catch (error) {
+            console.log(error);
+        }
+    };
     useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                const response = await axios.get(`/user/${userId}`);
-                setUserData(response.data.user);
-                setIsLoading(false);
-            } catch (error) {
-                console.log(error);
-            }
-        };
-
         fetchUserData();
     }, []);
-
-    // useEffect(() => {
-    //     console.log("userDATA", userData);
-    // }, [userData]);
 
     return isLoading ? (
         <View>
             <Text>loading</Text>
         </View>
     ) : (
-        <MainView>
-            
-                
-                <ProfileView>
-                    <Image source={profile} />
-                
-                </ProfileView>
-            
+        <MainView contentContainerStyle={{ alignItems: "center" }}>
+            <ProfileView>
+                <Image source={profile} />
+            </ProfileView>
 
             <CustomInput
                 value={userData.firstname}
@@ -140,6 +140,9 @@ const ProfilePage = ({}) => {
             />
             <SubmitBtn onPress={handleSubmit}>
                 <Text>Submit</Text>
+            </SubmitBtn>
+            <SubmitBtn onPress={handleLogout}>
+                <Text>Logout</Text>
             </SubmitBtn>
         </MainView>
     );

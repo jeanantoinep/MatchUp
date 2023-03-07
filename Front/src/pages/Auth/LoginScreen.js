@@ -8,6 +8,7 @@ import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import logo from "../../../assets/logo.png";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 //REDUX
 import { useDispatch } from "react-redux";
@@ -78,14 +79,14 @@ const LoginScreen = () => {
      */
     const handleSubmit = async () => {
         try {
-            const response = await axios.post("/login", {
+            const { data } = await axios.post("/login", {
                 login: login,
                 password: password,
             });
-            const decoded = jwt_decode(response.data.token);
-            dispatch(
-                setUser({ user: decoded.user, token: response.data.token })
-            );
+            const decoded = jwt_decode(data.token);
+            const userInfo = { user: decoded.user, token: data.token };
+            dispatch(setUser(userInfo));
+            await AsyncStorage.setItem("userInfo", JSON.stringify(userInfo));
         } catch (error) {
             console.log(error);
         }

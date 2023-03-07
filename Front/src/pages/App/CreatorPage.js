@@ -11,7 +11,6 @@ import axios from "axios";
 import { setEvent } from "../../store/eventSlice";
 import EventDetails from "../../components/EventDetails";
 import styled from "styled-components";
-import { useNavigation } from "@react-navigation/native";
 
 const MainView = styled.View`
     padding: 20px;
@@ -21,13 +20,10 @@ const MainView = styled.View`
 
 const CreatorPage = ({ route }) => {
     const [isLoading, setIsLoading] = useState(true);
-    const [users, setUsers] = useState([]);
 
     const dispatch = useDispatch();
     const { eventId } = route.params;
     const event = useSelector((state) => state.event.event);
-    const userId = useSelector((state) => state.user.userInfo.userId);
-    const navigation = useNavigation();
 
     useEffect(() => {
         const fetchEvent = async () => {
@@ -47,15 +43,6 @@ const CreatorPage = ({ route }) => {
         !isLoading && (
             <MainView>
                 <EventDetails event={event} />
-                <TouchableOpacity
-                    onPress={() =>
-                        navigation.navigate("InviteUsers", {
-                            event: event,
-                        })
-                    }
-                >
-                    <Text>Invite users</Text>
-                </TouchableOpacity>
             </MainView>
         )
     );

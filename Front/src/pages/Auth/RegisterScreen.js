@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import styled from "styled-components/native";
 import { colors } from "../../../assets/colors";
+import jwt_decode from "jwt-decode";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { Picker } from "@react-native-picker/picker";
 import AuthInput from "../../components/AuthInput";
@@ -116,6 +118,15 @@ const RegisterScreen = () => {
     const dispatch = useDispatch();
     const handleSubmit = async () => {
         try {
+            console.log(
+                username,
+                firstname,
+                lastname,
+                email,
+                age,
+                gender,
+                password
+            );
             if (
                 !username ||
                 !firstname ||
@@ -136,7 +147,7 @@ const RegisterScreen = () => {
                     type: "warning",
                 });
             }
-            const response = await axios.post("/register", {
+            const { data, status } = await axios.post("/register", {
                 username,
                 firstname,
                 lastname,
@@ -147,10 +158,23 @@ const RegisterScreen = () => {
                 gender,
                 password,
             });
-            console.log(response.data);
-            const { user, token } = response.data;
-            dispatch(setUser({ user, token }));
+            if (status === 200) {
+                const decoded = jwt_decode(data.token);
+                const user = {
+                    user: decoded.user,
+                    token: data.token,
+                };
+                dispatch(setUser(user));
+                await AsyncStorage.setItem("userInfo", JSON.stringify(user));
+            }
         } catch (error) {
+            // if (error.response.status === 409) {
+            //     showMessage({
+            //         message:
+            //             "The username or the email you are trying to use is already taken",
+            //         type: "warning",
+            //     });
+            // }
             console.log(error);
         }
     };

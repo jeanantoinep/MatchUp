@@ -37,6 +37,10 @@ const AddGameBtn = styled.TouchableOpacity`
     padding: 10px;
 `;
 
+const NoContentView = styled.View`
+    margin: 0 auto;
+`;
+
 const Homepage = () => {
     const [isLoading, setIsLoading] = useState(true);
     const navigation = useNavigation();
@@ -86,7 +90,7 @@ const Homepage = () => {
         !isLoading && (
             <SectionList
                 sections={[
-                    { title: "Your games", data: userEvents, user: true },
+                    { title: "Your Games", data: userEvents, user: true },
                     {
                         title: "Joined Games",
                         data: participatingEvents,
@@ -95,6 +99,21 @@ const Homepage = () => {
                     { title: "Other games", data: otherEvents, user: false },
                 ]}
                 renderItem={({ item }) => <EventCard event={item} />}
+                renderSectionFooter={({ section }) => {
+                    if (section.data.length === 0) {
+                        let text = "";
+                        if (section.title === "Your Games") {
+                            text = "Create a game to invite your friends !";
+                        } else if (section.title === "Joined Games") {
+                            text = "You have not joined any game yet...";
+                        }
+                        return (
+                            <NoContentView>
+                                <Text>{text}</Text>
+                            </NoContentView>
+                        );
+                    }
+                }}
                 renderSectionHeader={({ section: { title, user } }) => (
                     <View>
                         <Title>{title}</Title>

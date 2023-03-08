@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, Image } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { colors } from "../../assets/colors";
 import HomepageStack from "./HomepageStack";
@@ -10,6 +10,8 @@ import profile from "../../assets/profile.png";
 import styled from "styled-components/native";
 import ProfilePage from "../pages/App/ProfilePage";
 import NotificationStack from "./NotificationStack";
+import axios from "axios";
+import { useSelector } from "react-redux";
 
 const styles = StyleSheet.create({
     tinyLogo: {
@@ -20,6 +22,20 @@ const styles = StyleSheet.create({
 const Tab = createBottomTabNavigator();
 
 const AppStack = () => {
+    const userToken = useSelector((state) => state.user.userToken);
+
+    axios.interceptors.request.use(
+        (config) => {
+            if (userToken) {
+                config.headers = {
+                    Authorization: `Bearer ${userToken}`,
+                };
+            }
+            return config;
+        },
+        (err) => Promise.reject(err)
+    );
+
     return (
         <Tab.Navigator
             screenOptions={{

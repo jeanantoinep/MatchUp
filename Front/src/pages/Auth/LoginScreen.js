@@ -86,15 +86,12 @@ const LoginScreen = () => {
             });
             if (status === 200) {
                 const decoded = jwt_decode(data.token);
-                const userInfo = {
+                const user = {
                     user: decoded.user,
                     token: data.token,
                 };
-                dispatch(setUser(userInfo));
-                await AsyncStorage.setItem(
-                    "userInfo",
-                    JSON.stringify(userInfo)
-                );
+                dispatch(setUser(user));
+                await AsyncStorage.setItem("userInfo", JSON.stringify(user));
             }
         } catch (error) {
             if (error.response.status === 401) {

@@ -62,6 +62,9 @@ const ViewEventText = styled.Text`
     color: ${colors.white};
     text-align: center;
 `;
+const Empty = styled.View`
+    margin: 120px auto;
+`;
 
 const InviteUsersPage = ({ route }) => {
     const [input, setInput] = useState("");
@@ -150,11 +153,13 @@ const InviteUsersPage = ({ route }) => {
                 data={users}
                 ListEmptyComponent={() =>
                     isLoading ? (
-                        <ActivityIndicator />
+                        <Empty>
+                            <ActivityIndicator size={"large"} />
+                        </Empty>
                     ) : input ? (
-                        <View>
+                        <Empty>
                             <Text>No users</Text>
-                        </View>
+                        </Empty>
                     ) : (
                         <></>
                     )

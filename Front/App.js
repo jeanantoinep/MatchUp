@@ -24,21 +24,12 @@ const RootStack = () => {
         const getUser = async () => {
             const userInfo = await AsyncStorage.getItem("userInfo");
             if (userInfo) {
+                console.log(userInfo);
                 dispatch(setUser(JSON.parse(userInfo)));
             }
         };
         getUser();
     }, []);
-
-    axios.interceptors.request.use(
-        (config) => {
-            if (userToken) {
-                config.headers = { Authorization: `Bearer ${userToken}` };
-            }
-            return config;
-        },
-        (err) => Promise.reject(err)
-    );
 
     return (
         <NavigationContainer>

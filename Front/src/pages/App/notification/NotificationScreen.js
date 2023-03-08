@@ -15,8 +15,41 @@ import { showMessage } from "react-native-flash-message";
 
 const InviteView = styled.View`
     padding: 20px;
-    border: 1px solid ${colors.red};
 `;
+
+const Divider = styled.View`
+    border: 1px solid grey;
+    width: 100%;
+    height: 1px;
+    margin: 0 auto;
+`;
+
+const InviteBtn = styled.TouchableOpacity`
+    padding: 6px 18px;
+    border-radius: 10px;
+    background-color: ${colors.red};
+    width: 30%;
+    margin-right: 5px;
+`;
+
+const InviteBtnText = styled.Text`
+    color: ${colors.white};
+    text-align: center;
+`;
+const ActionsView = styled.View`
+    display: flex;
+    flex-direction: row;
+    margin: 10px 0 0 0;
+`;
+const InviteText = styled.Text`
+    font-size: 16px;
+`;
+
+const Empty = styled.View`
+    margin: 120px auto;
+`;
+
+const EmptyText = styled.Text``;
 
 const NotificationScreen = () => {
     const [isLoading, setIsLoading] = useState(true);
@@ -30,6 +63,7 @@ const NotificationScreen = () => {
     };
     useEffect(() => {
         fetchInvites();
+        console.log(invites);
     }, []);
 
     const acceptInvite = async (item) => {
@@ -68,7 +102,7 @@ const NotificationScreen = () => {
 
     const renderSeeGameBtn = (eventId) => {
         return (
-            <TouchableOpacity
+            <InviteBtn
                 onPress={() =>
                     navigation.navigate("Games", {
                         screen: "EventPage",
@@ -76,34 +110,33 @@ const NotificationScreen = () => {
                     })
                 }
             >
-                <Text>See game</Text>
-            </TouchableOpacity>
+                <InviteBtnText>See game</InviteBtnText>
+            </InviteBtn>
         );
     };
 
     const renderInvite = (item) => {
-        const { sender, eventId, type, status, _id } = item;
-        if (status === "accepted") {
-            return;
-        }
+        const { sender, eventId, type, status } = item;
         return (
-            <InviteView>
-                <Text>{type}</Text>
-                <Text>
-                    {item.type === "invite"
-                        ? `${sender.username} has invited you to join their game ${eventId.name}`
-                        : `${sender.username} has requested to join your game ${eventId.name}`}
-                </Text>
-                <View>
-                    {renderSeeGameBtn(item.eventId._id)}
-                    <TouchableOpacity onPress={() => acceptInvite(item)}>
-                        <Text>Accept</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => declineInvite(item)}>
-                        <Text>Decline</Text>
-                    </TouchableOpacity>
-                </View>
-            </InviteView>
+            <>
+                <InviteView>
+                    <InviteText>
+                        {item.type === "invite"
+                            ? `${sender.username} has invited you to join their game ${eventId.name}`
+                            : `${sender.username} has requested to join your game ${eventId.name}`}
+                    </InviteText>
+                    <ActionsView>
+                        {renderSeeGameBtn(item.eventId._id)}
+                        <InviteBtn onPress={() => acceptInvite(item)}>
+                            <InviteBtnText>Accept</InviteBtnText>
+                        </InviteBtn>
+                        <InviteBtn onPress={() => declineInvite(item)}>
+                            <InviteBtnText>Decline</InviteBtnText>
+                        </InviteBtn>
+                    </ActionsView>
+                </InviteView>
+                <Divider></Divider>
+            </>
         );
     };
 
@@ -114,6 +147,12 @@ const NotificationScreen = () => {
                 renderItem={({ item }) => {
                     return renderInvite(item);
                 }}
+                scrollEnabled={true}
+                ListEmptyComponent={() => (
+                    <Empty>
+                        <Text>You don't have any notifications.</Text>
+                    </Empty>
+                )}
             />
         )
     );

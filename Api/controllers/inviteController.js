@@ -20,7 +20,7 @@ const getUserInvite = async (req, res) => {
         const { userId } = req.user;
         const userInvites = await Invites.find({
             receiver: userId,
-            status: { $nin: ["cancelled", "rejected"] },
+            status: { $nin: ["cancelled", "rejected", "accepted"] },
         })
             .populate({ path: "eventId", select: "name" })
             .populate({ path: "sender", select: "username" });

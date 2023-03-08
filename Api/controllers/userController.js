@@ -69,7 +69,6 @@ const register = async (req, res) => {
 const login = async (req, res) => {
     const { login, password } = req.body;
     try {
-        console.log(login, password);
         // check for duplicate users
         const user = await Users.findOne({
             $or: [{ username: login }, { email: login }],

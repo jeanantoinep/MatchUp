@@ -40,7 +40,7 @@ const ViewEventText = styled.Text`
     color: ${colors.white};
 `;
 
-const Event = ({ event }) => {
+const EventCard = ({ event }) => {
     const navigation = useNavigation();
     const userId = useSelector((state) => state.user.userInfo.userId);
     const handlePress = () => {
@@ -72,6 +72,6 @@ const Event = ({ event }) => {
     );
 };
 
-export default Event;
+export default EventCard;
 
 const styles = StyleSheet.create({});

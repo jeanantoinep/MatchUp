@@ -3,6 +3,7 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
+    FlatList,
     View,
 } from "react-native";
 import React, { useState, useEffect } from "react";
@@ -11,6 +12,7 @@ import axios from "axios";
 import { setEvent } from "../../store/eventSlice";
 import EventDetails from "../../components/EventDetails";
 import styled from "styled-components";
+import { useNavigation } from "@react-navigation/native";
 
 const MainView = styled.View`
     padding: 20px;
@@ -20,6 +22,7 @@ const MainView = styled.View`
 
 const CreatorPage = ({ route }) => {
     const [isLoading, setIsLoading] = useState(true);
+    const navigation = useNavigation();
 
     const dispatch = useDispatch();
     const { eventId } = route.params;
@@ -42,7 +45,26 @@ const CreatorPage = ({ route }) => {
     return (
         !isLoading && (
             <MainView>
-                <EventDetails event={event} />
+                <FlatList
+                    data={event.participants}
+                    renderItem={({ item }) => (
+                        <View>
+                            <Text>{item.username}</Text>
+                        </View>
+                    )}
+                    ListHeaderComponent={() => <EventDetails event={event} />}
+                    ListFooterComponent={() => (
+                        <TouchableOpacity
+                            onPress={() =>
+                                navigation.navigate("InviteUsers", {
+                                    event: event,
+                                })
+                            }
+                        >
+                            <Text>Invite users</Text>
+                        </TouchableOpacity>
+                    )}
+                />
             </MainView>
         )
     );

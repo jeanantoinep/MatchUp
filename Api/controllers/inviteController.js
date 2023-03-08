@@ -18,7 +18,6 @@ const createInvite = async (req, res) => {
 const getUserInvite = async (req, res) => {
     try {
         const { userId } = req.user;
-        console.log(userId);
         const userInvites = await Invites.find({
             receiver: userId,
             status: { $nin: ["cancelled", "rejected"] },

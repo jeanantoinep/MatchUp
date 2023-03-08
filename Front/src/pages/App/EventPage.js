@@ -9,6 +9,7 @@ import styled from "styled-components";
 import { colors } from "../../../assets/colors";
 
 import EventDetails from "../../components/EventDetails";
+import { showMessage } from "react-native-flash-message";
 
 const ViewEventBtn = styled.TouchableOpacity`
     padding: 6px 18px;
@@ -44,7 +45,11 @@ const EventPage = ({ route }) => {
         };
         const response = await axios.post(`/invite`, invite);
         if (response.status === 201) {
-            console.log("Your request has been sent");
+            console.log();
+            showMessage({
+                message: "Your request has been sent",
+                type: "success",
+            });
         }
         setUserInvite(response.data.newInvite);
     };
@@ -52,7 +57,10 @@ const EventPage = ({ route }) => {
     const cancelRequest = async () => {
         const response = await axios.put(`/invite/cancel/${userInvite._id}`);
         if (response.status === 200) {
-            console.log("Your request has been cancelled");
+            showMessage({
+                message: "Your request has been cancelled",
+                type: "success",
+            });
         }
         setUserInvite(null);
     };
@@ -75,7 +83,6 @@ const EventPage = ({ route }) => {
             fetchInvites();
             setIsLoading(false);
         };
-
         fetchEvent();
     }, []);
 

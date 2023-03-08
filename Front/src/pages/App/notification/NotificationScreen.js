@@ -11,6 +11,7 @@ import axios from "axios";
 import { colors } from "../../../../assets/colors";
 import styled from "styled-components";
 import { useNavigation } from "@react-navigation/native";
+import { showMessage } from "react-native-flash-message";
 
 const InviteView = styled.View`
     padding: 20px;
@@ -24,7 +25,6 @@ const NotificationScreen = () => {
     const fetchInvites = async () => {
         setIsLoading(true);
         const { data } = await axios.get("/invite/user");
-        console.log(data);
         setInvites(data);
         setIsLoading(false);
     };
@@ -32,16 +32,36 @@ const NotificationScreen = () => {
         fetchInvites();
     }, []);
 
-    const acceptInvite = async (id) => {
-        const response = await axios.put(`/invite/accept/${id}`);
+    const acceptInvite = async (item) => {
+        const { sender, eventId, _id, type } = item;
+        const response = await axios.put(`/invite/accept/${_id}`);
         if (response.status === 200) {
+            showMessage({
+                message:
+                    type === "invite"
+                        ? `You have accepted ${sender.username} invite to join their
+                game ${eventId.name}`
+                        : `You have accepted ${sender.username} request to join your
+                game ${eventId.name}`,
+                type: "success",
+            });
             fetchInvites();
         }
     };
 
-    const declineInvite = async (id) => {
-        const response = await axios.put(`/invite/decline/${id}`);
+    const declineInvite = async (item) => {
+        const { sender, eventId, _id, type } = item;
+        const response = await axios.put(`/invite/decline/${_id}`);
         if (response.status === 200) {
+            showMessage({
+                message:
+                    type === "invite"
+                        ? `You have declined ${sender.username} invite to join their
+                game ${eventId.name}`
+                        : `You have declined ${sender.username} request to join your
+                game ${eventId.name}`,
+                type: "success",
+            });
             fetchInvites();
         }
     };
@@ -64,77 +84,27 @@ const NotificationScreen = () => {
     const renderInvite = (item) => {
         const { sender, eventId, type, status, _id } = item;
         if (status === "accepted") {
-            return renderAcceptedRequest(item);
+            return;
         }
         return (
             <InviteView>
                 <Text>{type}</Text>
                 <Text>
-                    {sender.username} has invited you to join their game{" "}
-                    {eventId.name}
+                    {item.type === "invite"
+                        ? `${sender.username} has invited you to join their game ${eventId.name}`
+                        : `${sender.username} has requested to join your game ${eventId.name}`}
                 </Text>
                 <View>
                     {renderSeeGameBtn(item.eventId._id)}
-                    <TouchableOpacity onPress={() => acceptInvite(_id)}>
+                    <TouchableOpacity onPress={() => acceptInvite(item)}>
                         <Text>Accept</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => declineInvite(_id)}>
+                    <TouchableOpacity onPress={() => declineInvite(item)}>
                         <Text>Decline</Text>
                     </TouchableOpacity>
                 </View>
             </InviteView>
         );
-    };
-
-    const renderRequest = (item) => {
-        const { sender, eventId, type, status, _id } = item;
-        if (status === "accepted") {
-            return renderAcceptedRequest(item);
-        }
-        return (
-            <InviteView>
-                <Text>{type}</Text>
-                <Text>
-                    {sender.username} has requested to join your game{" "}
-                    {eventId.name}
-                </Text>
-                <View>
-                    {renderSeeGameBtn(item.eventId._id)}
-                    <TouchableOpacity onPress={() => acceptInvite(_id)}>
-                        <Text>Accept</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => declineInvite(_id)}>
-                        <Text>Decline</Text>
-                    </TouchableOpacity>
-                </View>
-            </InviteView>
-        );
-    };
-    const renderAcceptedRequest = (item) => {
-        const { sender, eventId, type } = item;
-        if (type === "request") {
-            return (
-                <InviteView>
-                    <Text>{item.type}</Text>
-                    <Text>
-                        You have accepted {sender.username} request to join your
-                        game {eventId.name}
-                    </Text>
-                    {renderSeeGameBtn(item.eventId._id)}
-                </InviteView>
-            );
-        } else if (type === "invite") {
-            return (
-                <InviteView>
-                    <Text>{item.type}</Text>
-                    <Text>
-                        You have accepted {sender.username} invite to join their
-                        game {eventId.name}
-                    </Text>
-                    {renderSeeGameBtn(item.eventId._id)}
-                </InviteView>
-            );
-        }
     };
 
     return (
@@ -142,9 +112,7 @@ const NotificationScreen = () => {
             <FlatList
                 data={invites}
                 renderItem={({ item }) => {
-                    return item.type === "request"
-                        ? renderRequest(item)
-                        : renderInvite(item);
+                    return renderInvite(item);
                 }}
             />
         )

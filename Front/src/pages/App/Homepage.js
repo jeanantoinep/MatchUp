@@ -11,7 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { setEvents } from "../../store/eventSlice";
 import axios from "axios";
-import Event from "../../components/Event";
+import EventCard from "../../components/EventCard";
 import { useState } from "react";
 
 import { AntDesign } from "@expo/vector-icons";
@@ -59,7 +59,6 @@ const Homepage = () => {
                 const participating = [];
                 const other = [];
                 data.events.forEach((event) => {
-                    console.log(event);
                     if (event.creator === userId) {
                         user.push(event);
                     } else if (event.participants.some((el) => el === userId)) {
@@ -95,7 +94,7 @@ const Homepage = () => {
                     },
                     { title: "Other games", data: otherEvents, user: false },
                 ]}
-                renderItem={({ item }) => <Event event={item} />}
+                renderItem={({ item }) => <EventCard event={item} />}
                 renderSectionHeader={({ section: { title, user } }) => (
                     <View>
                         <Title>{title}</Title>

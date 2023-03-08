@@ -60,11 +60,10 @@ const EventPage = ({ route }) => {
         const invite = {
             type: "request",
             eventId: eventId,
-            receiver: event.creator,
+            receiver: event.creator._id,
         };
         const response = await axios.post(`/invite`, invite);
         if (response.status === 201) {
-            console.log();
             showMessage({
                 message: "Your request has been sent",
                 type: "success",
@@ -97,10 +96,13 @@ const EventPage = ({ route }) => {
 
     const fetchInvites = async () => {
         const { data } = await axios.get(`/event/invite/${eventId}`);
+        console.log(data);
+        console.log(userId);
         setInvites(data);
         const isUserInvite = data.find(
             (invite) => invite.type === "request" && invite.sender === userId
         );
+        console.log(isUserInvite);
         if (isUserInvite) {
             setUserInvite(isUserInvite);
         }

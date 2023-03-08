@@ -96,9 +96,6 @@ const LoginScreen = () => {
                     JSON.stringify(userInfo)
                 );
             }
-            if (status === 401) {
-                console.log("here");
-            }
         } catch (error) {
             if (error.response.status === 401) {
                 showMessage({

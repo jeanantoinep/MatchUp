@@ -11,10 +11,18 @@ import axios from "axios";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { showMessage } from "react-native-flash-message";
+import { colors } from "../../../assets/colors";
 
 const MainView = styled.View`
     flex: 1;
     padding-top: 10px;
+`;
+
+const Divider = styled.View`
+    border: 0.5px solid grey;
+    width: 100%;
+    height: 1px;
+    margin: 10px auto;
 `;
 
 const InputView = styled.View`
@@ -35,12 +43,26 @@ const SearchInput = styled.TextInput`
 `;
 
 const SearchResultView = styled.View`
-    padding: 16px 10px;
+    padding: 10px 10px;
+    margin: 0 16px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
 `;
+
+const ViewEventBtn = styled.TouchableOpacity`
+    padding: 6px 18px;
+    border-radius: 10px;
+    background-color: ${colors.red};
+    width: 25%;
+`;
+
+const ViewEventText = styled.Text`
+    color: ${colors.white};
+    text-align: center;
+`;
+
 const InviteUsersPage = ({ route }) => {
     const [input, setInput] = useState("");
     const [users, setUsers] = useState([]);
@@ -143,20 +165,27 @@ const InviteUsersPage = ({ route }) => {
                             el.receiver === item._id || el.sender === item._id
                     );
                     return (
-                        <SearchResultView>
-                            <Text>{item.username}</Text>
-                            <TouchableOpacity
-                                onPress={() => {
-                                    invite
-                                        ? cancelInvite(invite._id)
-                                        : sendInvite(item._id);
-                                }}
-                            >
-                                <Text style={invite && { color: "#990000" }}>
-                                    {invite ? "cancel" : "invite"}
+                        <>
+                            <SearchResultView>
+                                <Text style={{ fontSize: 16 }}>
+                                    {item.username}
                                 </Text>
-                            </TouchableOpacity>
-                        </SearchResultView>
+                                <ViewEventBtn
+                                    onPress={() => {
+                                        invite
+                                            ? cancelInvite(invite._id)
+                                            : sendInvite(item._id);
+                                    }}
+                                >
+                                    <ViewEventText
+                                        style={invite && { color: "#990000" }}
+                                    >
+                                        {invite ? "Cancel" : "Invite"}
+                                    </ViewEventText>
+                                </ViewEventBtn>
+                            </SearchResultView>
+                            <Divider></Divider>
+                        </>
                     );
                 }}
             />

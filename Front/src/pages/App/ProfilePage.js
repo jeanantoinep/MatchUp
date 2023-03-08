@@ -54,7 +54,7 @@ const SubmitBtn = styled.TouchableOpacity`
     justify-content: center;
     align-items: center;
     border-radius: 8px;
-    margin: 30px 0;
+    margin: 16px 0 0 0;
 `;
 
 const ProfileView = styled.View`

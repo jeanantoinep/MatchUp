@@ -13,11 +13,29 @@ import { setEvent } from "../../store/eventSlice";
 import EventDetails from "../../components/EventDetails";
 import styled from "styled-components";
 import { useNavigation } from "@react-navigation/native";
+import { colors } from "../../../assets/colors";
+import UsernameListItem from "../../components/UsernameListItem";
 
 const MainView = styled.View`
     padding: 20px;
     display: flex;
     align-items: center;
+`;
+const ViewEventBtn = styled.TouchableOpacity`
+    padding: 6px 18px;
+    border-radius: 10px;
+    background-color: ${colors.red};
+`;
+const ViewEventText = styled.Text`
+    color: ${colors.white};
+    text-align: center;
+`;
+
+const ActionView = styled.View`
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin: 20px 0;
 `;
 
 const CreatorPage = ({ route }) => {
@@ -46,23 +64,23 @@ const CreatorPage = ({ route }) => {
         !isLoading && (
             <MainView>
                 <FlatList
-                    data={event.participants}
+                    data={[event.creator, ...event.participants]}
                     renderItem={({ item }) => (
-                        <View>
-                            <Text>{item.username}</Text>
-                        </View>
+                        <UsernameListItem username={item.username} />
                     )}
                     ListHeaderComponent={() => <EventDetails event={event} />}
                     ListFooterComponent={() => (
-                        <TouchableOpacity
-                            onPress={() =>
-                                navigation.navigate("InviteUsers", {
-                                    event: event,
-                                })
-                            }
-                        >
-                            <Text>Invite users</Text>
-                        </TouchableOpacity>
+                        <ActionView>
+                            <ViewEventBtn
+                                onPress={() =>
+                                    navigation.navigate("InviteUsers", {
+                                        event: event,
+                                    })
+                                }
+                            >
+                                <ViewEventText>Invite users</ViewEventText>
+                            </ViewEventBtn>
+                        </ActionView>
                     )}
                 />
             </MainView>

@@ -1,3 +1,6 @@
+const { getDate } = require("./getDate");
+const { getDay } = require("./getDay");
+
 module.exports = (date) => {
-    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+    return `${getDay(date).slice(0, 3)}, ${getDate(date)}`;
 };

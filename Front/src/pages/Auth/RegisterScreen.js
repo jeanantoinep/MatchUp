@@ -14,6 +14,7 @@ import logo from "../../../assets/logo.png";
 //REDUX
 import { useDispatch } from "react-redux";
 import { setUser } from "../../store/userSlice";
+import { showMessage } from "react-native-flash-message";
 
 const LogoView = styled.View`
     border: 0px solid ${colors.red};
@@ -115,12 +116,6 @@ const RegisterScreen = () => {
     const dispatch = useDispatch();
     const handleSubmit = async () => {
         try {
-            if (password !== checkPassword) {
-                return Alert.alert(
-                    "Attention",
-                    "Please enter two identical passwords"
-                );
-            }
             if (
                 !username ||
                 !firstname ||
@@ -130,7 +125,16 @@ const RegisterScreen = () => {
                 !gender ||
                 !password
             ) {
-                return Alert.alert("Warning", "Please fill all the fields");
+                return showMessage({
+                    message: "Please fill all the fields !",
+                    type: "warning",
+                });
+            }
+            if (password !== checkPassword) {
+                return showMessage({
+                    message: "Your passwords don't match !",
+                    type: "warning",
+                });
             }
             const response = await axios.post("/register", {
                 username,

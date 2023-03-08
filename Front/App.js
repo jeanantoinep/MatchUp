@@ -9,11 +9,26 @@ import AuthStack from "./src/navigation/AuthStack";
 
 import { useDispatch, useSelector } from "react-redux";
 import AppStack from "./src/navigation/AppStack";
+import { useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { setUser } from "./src/store/userSlice";
+import FlashMessage from "react-native-flash-message";
 
 axios.defaults.baseURL = "http://192.168.1.35:3000";
 
 const RootStack = () => {
     const userToken = useSelector((state) => state.user.userToken);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        const getUser = async () => {
+            const userInfo = await AsyncStorage.getItem("userInfo");
+            if (userInfo) {
+                dispatch(setUser(JSON.parse(userInfo)));
+            }
+        };
+        getUser();
+    }, []);
 
     axios.interceptors.request.use(
         (config) => {
@@ -36,6 +51,7 @@ export default function App() {
     return (
         <Provider store={store}>
             <RootStack />
+            <FlashMessage position={"bottom"} />
         </Provider>
     );
 }

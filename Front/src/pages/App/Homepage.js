@@ -16,6 +16,7 @@ import { useState } from "react";
 
 import { AntDesign } from "@expo/vector-icons";
 import { colors } from "../../../assets/colors";
+import { useIsFocused } from "@react-navigation/native";
 
 const MainView = styled.View`
     width: 100%;
@@ -28,7 +29,9 @@ const MainView = styled.View`
 const Title = styled.Text`
     font-size: 28px;
     text-align: center;
+    margin: 16px 0;
 `;
+
 const AddGameBtn = styled.TouchableOpacity`
     margin: 0 auto;
     padding: 10px;
@@ -40,39 +43,56 @@ const Homepage = () => {
     const dispatch = useDispatch();
 
     const userEvents = useSelector((state) => state.event.userEvents);
+    const participatingEvents = useSelector(
+        (state) => state.event.participatingEvents
+    );
     const otherEvents = useSelector((state) => state.event.otherEvents);
     const userId = useSelector((state) => state.user.userInfo.userId);
+
+    const isFocused = useIsFocused();
 
     useEffect(() => {
         const fetchEvents = async () => {
             try {
                 const { data } = await axios.get("/events");
                 const user = [];
+                const participating = [];
                 const other = [];
                 data.events.forEach((event) => {
-                    if (
-                        event.creator === userId ||
-                        event.participants.includes(userId)
-                    ) {
+                    console.log(event);
+                    if (event.creator === userId) {
                         user.push(event);
+                    } else if (event.participants.some((el) => el === userId)) {
+                        participating.push(event);
                     } else {
                         other.push(event);
                     }
                 });
-                dispatch(setEvents({ userEvents: user, otherEvents: other }));
+                dispatch(
+                    setEvents({
+                        userEvents: user,
+                        otherEvents: other,
+                        participatingEvents: participating,
+                    })
+                );
                 setIsLoading(false);
             } catch (error) {
                 console.log(error);
             }
         };
         fetchEvents();
-    }, []);
+    }, [isFocused]);
 
     return (
         !isLoading && (
             <SectionList
                 sections={[
                     { title: "Your games", data: userEvents, user: true },
+                    {
+                        title: "Joined Games",
+                        data: participatingEvents,
+                        user: false,
+                    },
                     { title: "Other games", data: otherEvents, user: false },
                 ]}
                 renderItem={({ item }) => <Event event={item} />}

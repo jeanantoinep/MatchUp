@@ -5,19 +5,22 @@ const inviteSchema = new Schema({
     type: {
         required: true,
         type: String,
+        enum: ["request", "invite"],
     },
     eventId: {
         required: true,
         type: Schema.Types.ObjectId,
-        ref: "Event",
+        ref: "Events",
     },
     sender: {
         required: true,
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: "User",
     },
     receiver: {
         required: true,
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: "User",
     },
     date: {
         required: true,
@@ -28,6 +31,7 @@ const inviteSchema = new Schema({
         required: true,
         type: String,
         enum: ["pending", "accepted", "rejected", "cancelled"],
+        default: "pending",
     },
 });
 

@@ -13,6 +13,7 @@ import axios from "axios";
 import { colors } from "../../../assets/colors";
 import CustomInput from "../../components/CustomInput";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { useNavigation } from "@react-navigation/native";
 
 const DateInput = styled.TouchableOpacity`
     margin: 18px 0;
@@ -57,6 +58,7 @@ const styles = StyleSheet.create({
 });
 
 const AddGame = () => {
+    const navigation = useNavigation();
     const [name, setName] = useState("");
     const [nb, setNb] = useState(0);
     const [location, setLocation] = useState("");
@@ -111,6 +113,7 @@ const AddGame = () => {
 
     const handleSubmit = async () => {
         try {
+            console.log(startTime, endTime);
             if (!name || !nb || !location || !startTime || !endTime) {
                 return Alert.alert("Warning", "please fill all the fields");
             }
@@ -119,8 +122,11 @@ const AddGame = () => {
                 nb_participants: nb,
                 location,
                 participants: [],
+                startDate: startTime,
+                endDate: endTime,
             });
             console.log(response.data);
+            navigation.navigate("Homepage");
         } catch (error) {
             console.log(error);
         }

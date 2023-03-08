@@ -10,6 +10,7 @@ import styled from "styled-components/native";
 import axios from "axios";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { showMessage } from "react-native-flash-message";
 
 const MainView = styled.View`
     flex: 1;
@@ -46,7 +47,6 @@ const InviteUsersPage = ({ route }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [eventInvites, setEventInvites] = useState([]);
 
-    // const navigation = useNavigation();
     const { event } = route.params;
 
     const sendInvite = async (receiver) => {
@@ -58,7 +58,10 @@ const InviteUsersPage = ({ route }) => {
             };
             const response = await axios.post("/invite", invite);
             if (response.status === 201) {
-                console.log("Your request has been sent");
+                showMessage({
+                    message: "Your invite has been sent",
+                    type: "success",
+                });
             }
             fetchEventInvites();
         } catch (error) {
@@ -70,7 +73,10 @@ const InviteUsersPage = ({ route }) => {
         try {
             const response = await axios.put(`/invite/cancel/${inviteId}`);
             if (response.status === 200) {
-                console.log("Your invite has been cancelled");
+                showMessage({
+                    message: "Your invite has been cancelled",
+                    type: "success",
+                });
             }
             fetchEventInvites();
         } catch (error) {

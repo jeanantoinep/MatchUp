@@ -31,68 +31,33 @@ const IconView = styled.View`
     align-items: center;
 `;
 
-
 const EventDetails = ({ event }) => {
-    const navigation=useNavigation();
     return (
         <View>
-            <FlatList
-                data={event.participants}
-                renderItem={({ item }) => (
-                    <View>
-                        <Text>{item.username}</Text>
-                    </View>
-                )}
-                ListFooterComponent={() => (
-                    <TouchableOpacity
-                        onPress={() =>
-                            navigation.navigate("InviteUsers", {
-                                event: event,
-                            })
-                        }
-                    >
-                        <Text>Invite users</Text>
-                    </TouchableOpacity>
-                )}
-                ListHeaderComponent={() => (
-                    <>
-                        <Title>{event.name}</Title>
-                        <LineView>
-                            <IconView>
-                                <AntDesign
-                                    name="user"
-                                    size={24}
-                                    color="black"
-                                />
-                            </IconView>
-                            <Text>
-                                Looking for :{" "}
-                                {event.nb_participants -
-                                    event.participants.length -
-                                    1}{" "}
-                                player(s)
-                            </Text>
-                        </LineView>
-                        <LineView>
-                            <IconView>
-                                <AntDesign
-                                    name="calendar"
-                                    size={24}
-                                    color="black"
-                                />
-                            </IconView>
+            <Title>{event.name}</Title>
+            <LineView>
+                <IconView>
+                    <AntDesign name="user" size={24} color="black" />
+                </IconView>
+                <Text>
+                    Looking for :{" "}
+                    {event.nb_participants - event.participants.length - 1}{" "}
+                    player(s)
+                </Text>
+            </LineView>
+            <LineView>
+                <IconView>
+                    <AntDesign name="calendar" size={24} color="black" />
+                </IconView>
 
-                            <Text>
-                                {displayDate(new Date(event.startDate))},{" "}
-                                {displayTime(
-                                    new Date(event.startDate),
-                                    new Date(event.endDate)
-                                )}
-                            </Text>
-                        </LineView>
-                    </>
-                )}
-            />
+                <Text>
+                    {displayDate(new Date(event.startDate))},{" "}
+                    {displayTime(
+                        new Date(event.startDate),
+                        new Date(event.endDate)
+                    )}
+                </Text>
+            </LineView>
         </View>
     );
 };

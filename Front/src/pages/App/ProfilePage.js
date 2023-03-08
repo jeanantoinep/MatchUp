@@ -94,6 +94,7 @@ const ProfilePage = ({}) => {
     const handleLogout = async () => {
         await AsyncStorage.removeItem("userInfo");
         dispatch(logout());
+        axios.interceptors.request.clear();
     };
     const fetchUserData = async () => {
         try {

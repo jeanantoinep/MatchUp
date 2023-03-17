@@ -4,6 +4,7 @@ import {
     Text,
     TouchableOpacity,
     View,
+    RefreshControl,
 } from "react-native";
 import React from "react";
 import { useEffect, useState } from "react";
@@ -12,6 +13,7 @@ import { colors } from "../../../../assets/colors";
 import styled from "styled-components";
 import { useNavigation } from "@react-navigation/native";
 import { showMessage } from "react-native-flash-message";
+import { useIsFocused } from "@react-navigation/native";
 
 const InviteView = styled.View`
     padding: 20px;
@@ -54,17 +56,24 @@ const EmptyText = styled.Text``;
 const NotificationScreen = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [invites, setInvites] = useState([]);
+    const [isRefreshing, setIsRefreshing] = useState(false);
+
     const navigation = useNavigation();
+    const isFocused = useIsFocused();
+
     const fetchInvites = async () => {
         setIsLoading(true);
         const { data } = await axios.get("/invite/user");
         setInvites(data);
         setIsLoading(false);
+        setIsRefreshing(false);
     };
+
     useEffect(() => {
-        fetchInvites();
-        console.log(invites);
-    }, []);
+        if (isFocused === true) {
+            fetchInvites();
+        }
+    }, [isFocused]);
 
     const acceptInvite = async (item) => {
         const { sender, eventId, _id, type } = item;
@@ -147,6 +156,12 @@ const NotificationScreen = () => {
                 renderItem={({ item }) => {
                     return renderInvite(item);
                 }}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={isRefreshing}
+                        onRefresh={fetchInvites}
+                    />
+                }
                 scrollEnabled={true}
                 ListEmptyComponent={() => (
                     <Empty>

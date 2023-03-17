@@ -1,10 +1,4 @@
-import {
-    View,
-    Text,
-    TouchableOpacity,
-    FlatList,
-    SectionList,
-} from "react-native";
+import { View, Text, SectionList, RefreshControl } from "react-native";
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useNavigation } from "@react-navigation/native";
@@ -43,6 +37,7 @@ const NoContentView = styled.View`
 
 const Homepage = () => {
     const [isLoading, setIsLoading] = useState(true);
+    const [isRefreshing, setIsRefreshing] = useState(false);
     const navigation = useNavigation();
     const dispatch = useDispatch();
 
@@ -55,35 +50,39 @@ const Homepage = () => {
 
     const isFocused = useIsFocused();
 
+    const fetchEvents = async () => {
+        try {
+            const { data } = await axios.get("/events");
+            const user = [];
+            const participating = [];
+            const other = [];
+            data.events.forEach((event) => {
+                if (event.creator === userId) {
+                    user.push(event);
+                } else if (event.participants.some((el) => el === userId)) {
+                    participating.push(event);
+                } else {
+                    other.push(event);
+                }
+            });
+            dispatch(
+                setEvents({
+                    userEvents: user,
+                    otherEvents: other,
+                    participatingEvents: participating,
+                })
+            );
+            setIsLoading(false);
+            setIsRefreshing(false);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     useEffect(() => {
-        const fetchEvents = async () => {
-            try {
-                const { data } = await axios.get("/events");
-                const user = [];
-                const participating = [];
-                const other = [];
-                data.events.forEach((event) => {
-                    if (event.creator === userId) {
-                        user.push(event);
-                    } else if (event.participants.some((el) => el === userId)) {
-                        participating.push(event);
-                    } else {
-                        other.push(event);
-                    }
-                });
-                dispatch(
-                    setEvents({
-                        userEvents: user,
-                        otherEvents: other,
-                        participatingEvents: participating,
-                    })
-                );
-                setIsLoading(false);
-            } catch (error) {
-                console.log(error);
-            }
-        };
-        fetchEvents();
+        if (isFocused === true) {
+            fetchEvents();
+        }
     }, [isFocused]);
 
     return (
@@ -130,6 +129,12 @@ const Homepage = () => {
                         )}
                     </View>
                 )}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={isRefreshing}
+                        onRefresh={fetchEvents}
+                    />
+                }
             />
         )
     );

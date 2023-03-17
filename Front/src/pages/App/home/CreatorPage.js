@@ -9,12 +9,12 @@ import {
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { setEvent } from "../../store/eventSlice";
-import EventDetails from "../../components/EventDetails";
+import { setEvent } from "../../../store/eventSlice";
+import EventDetails from "../../../components/EventDetails";
 import styled from "styled-components";
 import { useNavigation } from "@react-navigation/native";
-import { colors } from "../../../assets/colors";
-import UsernameListItem from "../../components/UsernameListItem";
+import { colors } from "../../../../assets/colors";
+import UsernameListItem from "../../../components/UsernameListItem";
 
 const MainView = styled.View`
     padding: 20px;

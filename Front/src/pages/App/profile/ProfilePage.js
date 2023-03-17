@@ -6,17 +6,17 @@ import {
     View,
 } from "react-native";
 import styled from "styled-components";
-import profile from "../../../assets/profile.png";
+import profile from "../../../../assets/profile.png";
 
 import React from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { useState } from "react";
-import { colors } from "../../../assets/colors";
-import CustomInput from "../../components/CustomInput";
+import { colors } from "../../../../assets/colors";
+import CustomInput from "../../../components/CustomInput";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { logout } from "../../store/userSlice";
+import { logout } from "../../../store/userSlice";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const MainView = styled(KeyboardAwareScrollView)`

@@ -8,15 +8,15 @@ import {
 import React from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setEvent } from "../../store/eventSlice";
+import { setEvent } from "../../../store/eventSlice";
 import axios from "axios";
 import { useState } from "react";
 import styled from "styled-components";
-import { colors } from "../../../assets/colors";
+import { colors } from "../../../../assets/colors";
 
-import EventDetails from "../../components/EventDetails";
+import EventDetails from "../../../components/EventDetails";
 import { showMessage } from "react-native-flash-message";
-import UsernameListItem from "../../components/UsernameListItem";
+import UsernameListItem from "../../../components/UsernameListItem";
 
 const ViewEventBtn = styled.TouchableOpacity`
     padding: 6px 18px;

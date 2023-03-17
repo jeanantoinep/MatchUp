@@ -11,7 +11,7 @@ import axios from "axios";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { showMessage } from "react-native-flash-message";
-import { colors } from "../../../assets/colors";
+import { colors } from "../../../../assets/colors";
 
 const MainView = styled.View`
     flex: 1;

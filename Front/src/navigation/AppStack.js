@@ -8,7 +8,7 @@ import logo from "../../assets/logo.png";
 import notification from "../../assets/notification.png";
 import profile from "../../assets/profile.png";
 import styled from "styled-components/native";
-import ProfilePage from "../pages/App/ProfilePage";
+import ProfilePage from "../pages/App/profile/ProfilePage";
 import NotificationStack from "./NotificationStack";
 import axios from "axios";
 import { useSelector } from "react-redux";

@@ -14,7 +14,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setUser } from "./src/store/userSlice";
 import FlashMessage from "react-native-flash-message";
 
-axios.defaults.baseURL = "http://192.168.1.35:3000";
+axios.defaults.baseURL = process.env.API_URL;
 
 const RootStack = () => {
     const userToken = useSelector((state) => state.user.userToken);

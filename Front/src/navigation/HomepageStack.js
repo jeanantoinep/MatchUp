@@ -1,9 +1,9 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import AddGame from "../pages/App/AddGame";
-import EventPage from "../pages/App/EventPage";
-import Homepage from "../pages/App/Homepage";
-import CreatorPage from "../pages/App/CreatorPage";
-import InviteUsersPage from "../pages/App/InviteUsersPage";
+import AddGame from "../pages/App/home/AddGame";
+import EventPage from "../pages/App/home/EventPage";
+import Homepage from "../pages/App/home/Homepage";
+import CreatorPage from "../pages/App/home/CreatorPage";
+import InviteUsersPage from "../pages/App/profile/InviteUsersPage";
 
 const Stack = createNativeStackNavigator();
 

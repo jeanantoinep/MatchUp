@@ -10,8 +10,8 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import axios from "axios";
-import { colors } from "../../../assets/colors";
-import CustomInput from "../../components/CustomInput";
+import { colors } from "../../../../assets/colors";
+import CustomInput from "../../../components/CustomInput";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useNavigation } from "@react-navigation/native";
 

@@ -3,13 +3,13 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
-import { setEvents } from "../../store/eventSlice";
+import { setEvents } from "../../../store/eventSlice";
 import axios from "axios";
-import EventCard from "../../components/EventCard";
+import EventCard from "../../../components/EventCard";
 import { useState } from "react";
 
 import { AntDesign } from "@expo/vector-icons";
-import { colors } from "../../../assets/colors";
+import { colors } from "../../../../assets/colors";
 import { useIsFocused } from "@react-navigation/native";
 
 const MainView = styled.View`

@@ -13,7 +13,10 @@ const auth = async (req, res, next) => {
             next();
         }
     } catch (error) {
-        res.status(401).json({
+        if (error instanceof jwt.TokenExpiredError) {
+            return res.status(401).json({ error: "JWT token is expired" });
+        }
+        return res.status(401).json({
             error: "Unauthorized",
         });
     }

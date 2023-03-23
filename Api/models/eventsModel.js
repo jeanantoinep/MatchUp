@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const Users = require("../models/usersModel");
+const football_pitch = require("./football_pitchModel");
 
 const eventSchema = new Schema({
     participants: [
@@ -22,7 +23,8 @@ const eventSchema = new Schema({
     },
     location: {
         required: true,
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: football_pitch,
     },
     name: {
         required: true,

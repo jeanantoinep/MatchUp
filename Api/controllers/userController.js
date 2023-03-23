@@ -130,7 +130,7 @@ const refreshAccessToken = async (req, res) => {
 
         // IF NO REFRESH TOKEN IS SEND RETURN 401 UNAUTHORIZED
         if (!refresh_token) {
-            throw "Unauthorized";
+            throw new Error("Unauthorized");
         }
 
         // CHECK TOKEN EXPIRY DATE WITH DECODED TOKEN
@@ -145,18 +145,15 @@ const refreshAccessToken = async (req, res) => {
                 error: "Refresh token is expired",
             });
         }
-        const jwt_key = process.env.JWT_KEY;
-        // VERIFY TOKEN SIGNATURE
-        const verifiedToken = jwt.verify(refresh_token, jwt_key);
-        console.log(verifiedToken);
 
+        // VERIFY TOKEN SIGNATURE
+        const jwt_key = process.env.JWT_KEY;
+        const verifiedToken = jwt.verify(refresh_token, jwt_key);
         // CHECK IF USER EXIST AND IF TOKEN IS FROM THE RIGHT USER IF NOT RETURN 401 UNAUTHORIZED
-        const {
-            user: { userId },
-        } = verifiedToken;
+        const { userId } = verifiedToken.user;
         const user = await Users.findById(userId);
         if (!user || user.refresh_token !== refresh_token) {
-            throw "Unauthorized";
+            throw new Error("Unauthorized");
         }
 
         // CREATE NEW ACCESS TOKEN AND SEND BACK TO USER
@@ -168,15 +165,18 @@ const refreshAccessToken = async (req, res) => {
             },
         };
         const token = jwt.sign(payload, jwt_key, {
-            expiresIn: "2m",
+            expiresIn: "24h",
         });
         return res
             .status(200)
             .send({ message: "New access token created", token });
     } catch (error) {
-        return res.status(401).json({
-            error: "Unauthorized",
-        });
+        if (error.message === "Unauthrorized") {
+            return res.status(401).json({
+                error: "Unauthorized",
+            });
+        }
+        return res.status(500).send(error.message);
     }
 };
 

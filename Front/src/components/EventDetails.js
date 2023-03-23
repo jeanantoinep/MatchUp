@@ -26,7 +26,7 @@ const LineView = styled.View`
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    width: 80%;
+    width: 90%;
 `;
 
 const IconView = styled.View`
@@ -80,7 +80,7 @@ const EventDetails = ({ event }) => {
                     <IconView>
                         <Entypo name="location-pin" size={24} color="black" />
                     </IconView>
-                    <LineText>{event.location}</LineText>
+                    <LineText>UrbanSoccer {event.location.location}</LineText>
                 </LineView>
                 <LineView>
                     <IconView>

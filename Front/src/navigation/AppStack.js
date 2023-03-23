@@ -43,16 +43,20 @@ const AppStack = () => {
     axios.interceptors.request.use(addAuthToRequest, (err) =>
         Promise.reject(err)
     );
+
     axios.interceptors.response.use(
         (response) => response,
         async (error) => {
             const originalRequest = error.config;
+            // IF THE RESPONSE SAYS THE ACCESS_TOKEN IS EXPIRED
             if (
                 error.response.status === 401 &&
                 error.response.data.error === "JWT token is expired" &&
                 !originalRequest._retry
             ) {
+                // CALL /REFRESH_TOKEN
                 const access_token = await refreshAccesstoken();
+                // IF THE REFRESH_TOKEN IS NOT VERIFIED OR EXPIRED LOGOUT USER
                 if (!access_token) {
                     await AsyncStorage.removeItem("userInfo");
                     await AsyncStorage.removeItem("refreshToken");
@@ -64,6 +68,8 @@ const AppStack = () => {
                     });
                     return Promise.reject(error);
                 }
+
+                // DECODE ACCESS_TOKEN AND SET USER
                 const decoded = jwt_decode(access_token);
                 const user = {
                     user: decoded.user,
@@ -71,6 +77,8 @@ const AppStack = () => {
                 };
                 dispatch(setUser(user));
                 await AsyncStorage.setItem("userInfo", JSON.stringify(user));
+
+                // CLEAR PREVIOUS REQUEST INTERCEPTOR AND SET INTERCEPTOR WITH NEW ACCESS_TOKEN
                 axios.interceptors.request.clear();
                 axios.interceptors.request.use(
                     (config) => {

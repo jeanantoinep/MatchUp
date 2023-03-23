@@ -93,7 +93,6 @@ const LoginScreen = () => {
                 dispatch(setUser(user));
                 await AsyncStorage.setItem("userInfo", JSON.stringify(user));
                 await AsyncStorage.setItem("refreshToken", data.refreshToken);
-                console.log(data.refreshToken);
             }
         } catch (error) {
             if (error.response.status === 401) {

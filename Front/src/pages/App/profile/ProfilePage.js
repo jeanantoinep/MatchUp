@@ -84,11 +84,17 @@ const ProfilePage = ({}) => {
 
     const handleSubmit = async () => {
         try {
-            const { data } = await axios.put(`/user/${userId}`, userData);
-            // setUserData(data.updated);
+            await axios.put(`/user/${userId}`, userData);
             fetchUserData();
+            showMessage({
+                message: "Profile updated successfully !",
+                type: "success",
+            });
         } catch (error) {
-            console.log(error);
+            showMessage({
+                message: "Error updating your profile",
+                type: "error",
+            });
         }
     };
 
@@ -142,11 +148,11 @@ const ProfilePage = ({}) => {
                 onChangeText={(value) => handleInputChange("username", value)}
                 name="Username"
             />
-            <CustomInput
+            {/* <CustomInput
                 value={userData.number}
                 onChangeText={(value) => handleInputChange("number", value)}
                 name="Phone Number"
-            />
+            /> */}
             <SubmitBtn onPress={handleSubmit}>
                 <Text>Submit</Text>
             </SubmitBtn>

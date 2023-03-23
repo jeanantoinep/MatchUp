@@ -3,6 +3,7 @@ const express = require("express");
 const {
     createFootballPitch,
     getFootballPitch,
+    getAllFootballPitch,
 } = require("../controllers/footballController");
 
 const footballRouter = express.Router();

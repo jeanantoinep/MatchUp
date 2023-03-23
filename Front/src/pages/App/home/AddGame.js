@@ -14,6 +14,8 @@ import { colors } from "../../../../assets/colors";
 import CustomInput from "../../../components/CustomInput";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useNavigation } from "@react-navigation/native";
+import { Picker } from "@react-native-picker/picker";
+import { showMessage } from "react-native-flash-message";
 
 const DateInput = styled.TouchableOpacity`
     margin: 18px 0;
@@ -54,6 +56,25 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         width: "100%",
+        marginTop: 15,
+    },
+    Picker: {
+        marginHorizontal: "auto",
+        backgroundColor: colors.whiteFade,
+        width: "100%",
+        color: colors.blueFade,
+    },
+    PickerView: {
+        borderRadius: 15,
+        overflow: "hidden",
+        width: "70%",
+        marginVertical: 16,
+        borderColor: "#b1a1a1",
+        borderWidth: 1,
+    },
+
+    PickerItem: {
+        color: "#000",
     },
 });
 
@@ -61,7 +82,8 @@ const AddGame = () => {
     const navigation = useNavigation();
     const [name, setName] = useState("");
     const [nb, setNb] = useState(0);
-    const [location, setLocation] = useState("");
+    const [locationList, setLocationList] = useState([]);
+    const [location, setLocation] = useState(null);
     const [startTime, setStartTime] = useState(new Date());
     const [endTime, setEndTime] = useState(new Date());
     const [openDate, setOpenDate] = useState(false);
@@ -113,7 +135,6 @@ const AddGame = () => {
 
     const handleSubmit = async () => {
         try {
-            console.log(startTime, endTime);
             if (!name || !nb || !location || !startTime || !endTime) {
                 return Alert.alert("Warning", "please fill all the fields");
             }
@@ -125,17 +146,27 @@ const AddGame = () => {
                 startDate: startTime,
                 endDate: endTime,
             });
-            console.log(response.data);
             navigation.navigate("Homepage");
+            showMessage({
+                message: "Game successfully created !",
+                type: "success",
+            });
         } catch (error) {
             console.log(error);
         }
     };
 
+    useEffect(() => {
+        const fetchLocations = async () => {
+            const response = await axios.get("/footballs");
+            setLocationList(response.data.footballPitch);
+        };
+        fetchLocations();
+    }, []);
+
     return (
         <KeyboardAwareScrollView contentContainerStyle={styles.mainView}>
-            <Text>AddGame</Text>
-            <CustomInput name="Name" value={name} onChangeText={setName} />
+            <CustomInput name="Title" value={name} onChangeText={setName} />
             <CustomInput
                 name="Number of players"
                 value={nb}
@@ -190,12 +221,22 @@ const AddGame = () => {
                     )}
                 </TimeHalfView>
             </TimeView>
-
-            <CustomInput
-                name="Location"
-                value={location}
-                onChangeText={setLocation}
-            />
+            <View style={styles.PickerView}>
+                <Picker
+                    selectedValue={location}
+                    onValueChange={(itemValue) => setLocation(itemValue)}
+                    style={styles.Picker}
+                >
+                    {locationList.map((item) => (
+                        <Picker.Item
+                            key={item._id}
+                            label={"UrbanSoccer " + item.location}
+                            value={item._id}
+                            style={styles.PickerItem}
+                        />
+                    ))}
+                </Picker>
+            </View>
             <AddGameBtn onPress={handleSubmit}>
                 <Text>Confirm Game</Text>
             </AddGameBtn>

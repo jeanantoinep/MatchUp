@@ -18,6 +18,7 @@ import CustomInput from "../../../components/CustomInput";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { logout } from "../../../store/userSlice";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { showMessage } from "react-native-flash-message";
 
 const MainView = styled(KeyboardAwareScrollView)`
     width: 100%;
@@ -83,18 +84,31 @@ const ProfilePage = ({}) => {
 
     const handleSubmit = async () => {
         try {
-            const { data } = await axios.put(`/user/${userId}`, userData);
-            // setUserData(data.updated);
+            await axios.put(`/user/${userId}`, userData);
             fetchUserData();
+            showMessage({
+                message: "Profile updated successfully !",
+                type: "success",
+            });
         } catch (error) {
-            console.log(error);
+            showMessage({
+                message: "Error updating your profile",
+                type: "error",
+            });
         }
     };
 
     const handleLogout = async () => {
-        await AsyncStorage.removeItem("userInfo");
-        dispatch(logout());
-        axios.interceptors.request.clear();
+        try {
+            await axios.post("/logout");
+            await AsyncStorage.removeItem("userInfo");
+            await AsyncStorage.removeItem("refreshToken");
+            dispatch(logout());
+            axios.interceptors.request.clear();
+            showMessage({ message: "You have logged out", type: "success" });
+        } catch (error) {
+            showMessage({ message: "Error", type: "danger" });
+        }
     };
     const fetchUserData = async () => {
         try {
@@ -134,11 +148,11 @@ const ProfilePage = ({}) => {
                 onChangeText={(value) => handleInputChange("username", value)}
                 name="Username"
             />
-            <CustomInput
+            {/* <CustomInput
                 value={userData.number}
                 onChangeText={(value) => handleInputChange("number", value)}
                 name="Phone Number"
-            />
+            /> */}
             <SubmitBtn onPress={handleSubmit}>
                 <Text>Submit</Text>
             </SubmitBtn>

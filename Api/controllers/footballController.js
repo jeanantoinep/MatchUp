@@ -15,7 +15,7 @@ const getFootballPitch = async (req, res) => {
     }
 };
 
-getAllFootballPitch = async (req, res) => {
+const getAllFootballPitch = async (req, res) => {
     try {
         const footballPitch = await FootballPitch.find();
         res.status(200).json({ footballPitch });

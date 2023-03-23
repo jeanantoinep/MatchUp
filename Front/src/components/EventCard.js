@@ -59,7 +59,7 @@ const EventCard = ({ event }) => {
                 />
             </EventHeader>
             <EventBody>
-                <Text>{event.location}</Text>
+                <Text>Urban soccer {event.location.location}</Text>
                 <Text>{`${event.participants.length + 1} / ${
                     event.nb_participants
                 }`}</Text>

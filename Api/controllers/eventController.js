@@ -61,7 +61,8 @@ const getOneEvent = async (req, res) => {
         const { eventId } = req.params;
         const event = await Event.findOne({ _id: eventId })
             .populate("participants", "username")
-            .populate("creator", "username");
+            .populate("creator", "username")
+            .populate({ path: "location", select: "location" });
         if (event) {
             return res.status(200).json({ event });
         }
@@ -75,7 +76,9 @@ const getOneEvent = async (req, res) => {
 
 const getAllEvents = async (req, res) => {
     try {
-        const events = await Event.find({ endDate: { $gt: new Date() } });
+        const events = await Event.find({
+            endDate: { $gt: new Date() },
+        }).populate({ path: "location", select: "location" });
         res.status(200).json({ events });
     } catch (error) {
         res.status(500).send(error.message);

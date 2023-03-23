@@ -45,6 +45,9 @@ const userSchema = new Schema({
         type: String,
         enum: ["male", "female", "other"],
     },
+    refresh_token: {
+        type: String,
+    },
 });
 
 const Users = mongoose.model("User", userSchema);

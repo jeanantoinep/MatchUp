@@ -24,7 +24,6 @@ const RootStack = () => {
         const getUser = async () => {
             const userInfo = await AsyncStorage.getItem("userInfo");
             if (userInfo) {
-                console.log(userInfo);
                 dispatch(setUser(JSON.parse(userInfo)));
             }
         };

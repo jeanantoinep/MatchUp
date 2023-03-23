@@ -1,6 +1,7 @@
 const Users = require("../models/usersModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const jwt_key = process.env.JWT_KEY;
 
 const checkPassword = (password) => {
     // the checker checks for one uppercase, one lowercase, one digit and between 8 and 30 characters
@@ -54,8 +55,8 @@ const register = async (req, res) => {
                 userId: user._id,
             },
         };
-        const token = jwt.sign(payload, "RANDOM-TOKEN", { expiresIn: "24h" });
-        const refreshToken = jwt.sign(payload, "RANDOM-TOKEN", {
+        const token = jwt.sign(payload, jwt_key, { expiresIn: "24h" });
+        const refreshToken = jwt.sign(payload, jwt_key, {
             expiresIn: "30d",
         });
         user.refresh_token = refreshToken;
@@ -100,12 +101,12 @@ const login = async (req, res) => {
         };
 
         // CREATE A NEW REFRESH TOKEN
-        const refreshToken = jwt.sign(payload, "RANDOM-TOKEN", {
+        const refreshToken = jwt.sign(payload, jwt_key, {
             expiresIn: "30d",
         });
         user.refresh_token = refreshToken;
 
-        const token = jwt.sign(payload, "RANDOM-TOKEN", {
+        const token = jwt.sign(payload, jwt_key, {
             expiresIn: "24h",
         });
 
@@ -144,7 +145,7 @@ const refreshAccessToken = async (req, res) => {
         }
 
         // VERIFY TOKEN SIGNATURE
-        const verifiedToken = jwt.verify(refresh_token, "RANDOM-TOKEN");
+        const verifiedToken = jwt.verify(refresh_token, jwt_key);
         console.log(verifiedToken);
 
         // CHECK IF USER EXIST AND IF TOKEN IS FROM THE RIGHT USER IF NOT RETURN 401 UNAUTHORIZED
@@ -164,7 +165,7 @@ const refreshAccessToken = async (req, res) => {
                 userId: user._id,
             },
         };
-        const token = jwt.sign(payload, "RANDOM-TOKEN", {
+        const token = jwt.sign(payload, jwt_key, {
             expiresIn: "2m",
         });
         return res

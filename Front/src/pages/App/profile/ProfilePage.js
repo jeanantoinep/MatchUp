@@ -142,11 +142,11 @@ const ProfilePage = ({}) => {
                 onChangeText={(value) => handleInputChange("username", value)}
                 name="Username"
             />
-            <CustomInput
+            {/* <CustomInput
                 value={userData.number}
                 onChangeText={(value) => handleInputChange("number", value)}
                 name="Phone Number"
-            />
+            /> */}
             <SubmitBtn onPress={handleSubmit}>
                 <Text>Submit</Text>
             </SubmitBtn>

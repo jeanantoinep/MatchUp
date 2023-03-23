@@ -1,6 +1,7 @@
 const Users = require("../models/usersModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const jwt_key = process.env.JWT_KEY;
 
 const checkPassword = (password) => {
     // the checker checks for one uppercase, one lowercase, one digit and between 8 and 30 characters
@@ -45,7 +46,6 @@ const register = async (req, res) => {
             gender: req.body.gender,
             age: req.body.age,
         });
-        user.save();
 
         // create token
         const payload = {
@@ -55,11 +55,17 @@ const register = async (req, res) => {
                 userId: user._id,
             },
         };
-        const token = jwt.sign(payload, "RANDOM-TOKEN", { expiresIn: "24h" });
+        const token = jwt.sign(payload, jwt_key, { expiresIn: "24h" });
+        const refreshToken = jwt.sign(payload, jwt_key, {
+            expiresIn: "30d",
+        });
+        user.refresh_token = refreshToken;
+        await user.save();
 
         return res.status(200).json({
             message: "New user successfully created ! 🔥",
             token,
+            refreshToken,
         });
     } catch (error) {
         return res.status(500).json(error.message);
@@ -79,28 +85,106 @@ const login = async (req, res) => {
             });
         }
         const match = await bcrypt.compare(password, user.password);
-        if (match) {
-            // create token
-            const payload = {
-                user: {
-                    username: user.username,
-                    email: user.email,
-                    userId: user._id,
-                },
-            };
-            const token = jwt.sign(payload, "RANDOM-TOKEN", {
-                expiresIn: "24h",
-            });
-            return res.status(200).send({
-                message: "Logged in successfully 🔥",
-                token,
+        if (!match) {
+            return res.status(401).send({
+                message: "Wrong credentials",
             });
         }
-        return res.status(401).send({
-            message: "Wrong credentials",
+
+        // create token
+        const payload = {
+            user: {
+                username: user.username,
+                email: user.email,
+                userId: user._id,
+            },
+        };
+
+        // CREATE A NEW REFRESH TOKEN
+        const refreshToken = jwt.sign(payload, jwt_key, {
+            expiresIn: "30d",
+        });
+        user.refresh_token = refreshToken;
+
+        const token = jwt.sign(payload, jwt_key, {
+            expiresIn: "24h",
+        });
+
+        await user.save();
+
+        return res.status(200).send({
+            message: "Logged in successfully 🔥",
+            token,
+            refreshToken: user.refresh_token,
         });
     } catch (error) {
         return res.status(500).json(error.message);
+    }
+};
+
+const refreshAccessToken = async (req, res) => {
+    try {
+        const { refresh_token } = req.body;
+
+        // IF NO REFRESH TOKEN IS SEND RETURN 401 UNAUTHORIZED
+        if (!refresh_token) {
+            throw "Unauthorized";
+        }
+
+        // CHECK TOKEN EXPIRY DATE WITH DECODED TOKEN
+        // IF EXPIRED DELETE FROM DB AND RETURN 401 REFRESH TOKEN EXPIRED
+        const decodedToken = jwt.decode(refresh_token);
+        if (decodedToken.exp <= Date.now() / 1000) {
+            await Users.updateOne(
+                { _id: decodedToken.user.userId },
+                { refresh_token: null }
+            );
+            return res.status(401).json({
+                error: "Refresh token is expired",
+            });
+        }
+
+        // VERIFY TOKEN SIGNATURE
+        const verifiedToken = jwt.verify(refresh_token, jwt_key);
+        console.log(verifiedToken);
+
+        // CHECK IF USER EXIST AND IF TOKEN IS FROM THE RIGHT USER IF NOT RETURN 401 UNAUTHORIZED
+        const {
+            user: { userId },
+        } = verifiedToken;
+        const user = await Users.findById(userId);
+        if (!user || user.refresh_token !== refresh_token) {
+            throw "Unauthorized";
+        }
+
+        // CREATE NEW ACCESS TOKEN AND SEND BACK TO USER
+        const payload = {
+            user: {
+                username: user.username,
+                email: user.email,
+                userId: user._id,
+            },
+        };
+        const token = jwt.sign(payload, jwt_key, {
+            expiresIn: "2m",
+        });
+        return res
+            .status(200)
+            .send({ message: "New access token created", token });
+    } catch (error) {
+        return res.status(401).json({
+            error: "Unauthorized",
+        });
+    }
+};
+
+const logout = async (req, res) => {
+    try {
+        const { userId } = req.user;
+        await Users.findByIdAndUpdate(userId, { refresh_token: null });
+        return res.status(200).send("User has been logged out");
+    } catch (error) {
+        res.status(500).send(error.message);
     }
 };
 
@@ -194,6 +278,8 @@ const searchUsers = async (req, res) => {
 module.exports = {
     register,
     login,
+    refreshAccessToken,
+    logout,
     getOneUser,
     getAllUsers,
     deleteUser,

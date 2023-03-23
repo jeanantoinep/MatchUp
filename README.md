@@ -10,6 +10,7 @@ https://www.figma.com/file/mLXGkTccblyI1ze3tuhW8h/Untitled?node-id=0%3A1&t=UDD5E
 cd Front
 cp .env.template .env
 // write your API_URL (http://<your_ip_address>:3000)
+// write your JWT_KEY
 yarn
 yarn start
 //connect to the app using Expo Go app or Android Studio/Xcode

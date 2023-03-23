@@ -8,12 +8,15 @@ const auth = async (req, res, next) => {
             });
         const token = req.headers.authorization?.split(" ")[1];
         if (token) {
-            const decodedToken = jwt.verify(token, "RANDOM-TOKEN");
+            const decodedToken = jwt.verify(token, process.env.JWT_KEY);
             req.user = decodedToken.user;
             next();
         }
     } catch (error) {
-        res.status(401).json({
+        if (error instanceof jwt.TokenExpiredError) {
+            return res.status(401).json({ error: "JWT token is expired" });
+        }
+        return res.status(401).json({
             error: "Unauthorized",
         });
     }

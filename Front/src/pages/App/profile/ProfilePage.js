@@ -18,6 +18,7 @@ import CustomInput from "../../../components/CustomInput";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { logout } from "../../../store/userSlice";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { showMessage } from "react-native-flash-message";
 
 const MainView = styled(KeyboardAwareScrollView)`
     width: 100%;
@@ -92,9 +93,16 @@ const ProfilePage = ({}) => {
     };
 
     const handleLogout = async () => {
-        await AsyncStorage.removeItem("userInfo");
-        dispatch(logout());
-        axios.interceptors.request.clear();
+        try {
+            await axios.post("/logout");
+            await AsyncStorage.removeItem("userInfo");
+            await AsyncStorage.removeItem("refreshToken");
+            dispatch(logout());
+            axios.interceptors.request.clear();
+            showMessage({ message: "You have logged out", type: "success" });
+        } catch (error) {
+            showMessage({ message: "Error", type: "danger" });
+        }
     };
     const fetchUserData = async () => {
         try {
